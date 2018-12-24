@@ -16,6 +16,14 @@ public class BattleController : MonoBehaviour {
 	}
 	
 	void Update () {
-		
+        setPlayerInfo(player1);
+        //setPlayerInfo(player2);
 	}
+
+    private void setPlayerInfo(Player player){
+        // TODO set
+        // player.getDeckNum();
+        // player.getCemeteryNum();
+        // player.getHandNum();
+    }
 }

@@ -69,4 +69,23 @@ public class Player : MonoBehaviour {
             return false;
         }
     }
+
+    public int getDeckNum(){
+        return this.deck.Count;
+    }
+
+    public int getCemeteryNum(){
+        return this.cemetery.Count;
+    }
+
+    public int getHandNum() {
+        return this.hand.Count;
+    }
+
+    public void damaged(int num){
+        this.life = this.life - num;
+        if(life < 1){
+            // TODO 勝敗
+        }
+    }
 }
