@@ -88,4 +88,10 @@ public class Player : MonoBehaviour {
             // TODO 勝敗
         }
     }
+
+    public void displayHand(){
+        // TODO
+        //GameObject obj = (GameObject)Resources.Load("Goblin");
+        //Instantiate(obj, new Vector3(0.0f, 2.0f, 0.0f), Quaternion.identity);
+    }
 }

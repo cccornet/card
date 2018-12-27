@@ -13,11 +13,16 @@ public class BattleController : MonoBehaviour {
         bool firstPlay = Random.Range(0, 2) == 0 ? true : false;
         this.player1 = new Player(deck1, firstPlay);
         //this.player2 = new Player(deck2, !(firstPlay));
+        player1.displayHand();
 	}
 	
 	void Update () {
         setPlayerInfo(player1);
         //setPlayerInfo(player2);
+
+        //if(player1.changedHand){
+        //    player1.displayHand();
+        //}
 	}
 
     private void setPlayerInfo(Player player){
