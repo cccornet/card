@@ -6,28 +6,39 @@ public class Player : MonoBehaviour {
     private int maxPP;
     private int pp;
     private int life;
-    private bool playFirst;
-    private List<Card> deck; // 0を一番上とする
-    private List<Card> hand;
+    public bool playFirst { get; set; }
+    // 候補 カード名(String), Card, GameObject
+    // カード名が一番軽い コスト検索などが手間
+    // Card生成 -> GameObject生成 だとCardを2回インスタンス化してる
+    // デッキ全てを初めからGameObjectにするのは重そう
+    public List<Card> deck { get; set; }// 0を一番上とする
+    private List<GameObject> hand;
     private List<Card> cemetery;
 
-    public Player(List<Card> deck,bool playFirst){
-        this.maxPP = 0;
-        this.pp = this.maxPP;
-        this.life = 20;
-        this.playFirst = playFirst;
-        this.deck = deck;
-        this.hand = new List<Card>();
-        this.cemetery = new List<Card>();
+    private int MAXHAND = 9;
+
+    public Player(){
+        
     }
 
 	private void Start () {
-        drowCard(3);
+        this.maxPP = 0;
+        this.pp = this.maxPP;
+        this.life = 20;
+        // this.playFirst = playFirst;
+        // this.deck = deck;
+        this.hand = new List<GameObject>();
+        this.cemetery = new List<Card>();
+	}
+
+    public void initBattle(){
+        //drowCard(3);
+        drowCard(1);
         // TODO マリガン
-        if(playFirst == false){
+        if (playFirst == false) {
             drowCard(1);
         }
-	}
+    }
 	
     private void initTurn(){
         incrementPP();
@@ -47,7 +58,12 @@ public class Player : MonoBehaviour {
         for (int i = 0; i < n; i++){
             Card drowedCard = this.deck[0];
             this.deck.RemoveAt(0);
-            this.hand.Add(drowedCard);
+            if(this.getHandNum() < MAXHAND){
+                this.addHand(drowedCard);
+            }else/*手札の最大値を超える*/{
+                this.cemetery.Add(drowedCard);
+            }
+
         }
     }
 
@@ -79,6 +95,7 @@ public class Player : MonoBehaviour {
     }
 
     public int getHandNum() {
+        // FIXME nullP
         return this.hand.Count;
     }
 
@@ -89,9 +106,17 @@ public class Player : MonoBehaviour {
         }
     }
 
-    public void displayHand(){
-        // TODO
-        //GameObject obj = (GameObject)Resources.Load("Goblin");
-        //Instantiate(obj, new Vector3(0.0f, 2.0f, 0.0f), Quaternion.identity);
+    public void addHand(Card addCard){
+        GameObject card = (GameObject)Resources.Load("Prefabs/Card/" + addCard.cardName);
+        // TODO 場所
+        Instantiate(card, new Vector3(0.0f, 2.0f, 0.0f), Quaternion.identity);
+
+        // deckをstringにする場合
+        //GameObject newCard = new GameObject("");
+        //newCard.AddComponent<Goblin>();
+    }
+
+    public void setFirstPlay(){
+        // TODO 初回呼び出し時のみ変更可能な実装にする
     }
 }

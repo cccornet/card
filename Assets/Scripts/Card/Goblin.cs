@@ -3,14 +3,20 @@
 public class Goblin : Follower {
 
     // DBから持ってきた方がいい？
+    private string CARDNAME = "Goblin";
     private int COST = 1;
     private int ATTACK = 1;
     private int HEALTH = 2;
 
+    public Goblin(){
+        this.cardName = this.CARDNAME;
+        this.cost = this.COST;
+        this.attack = this.ATTACK;
+        this.health = this.HEALTH;
+    }
+
 	void Start () {
-        this.cost = COST;
-        this.attack = ATTACK;
-        this.health = HEALTH;
+        // コンストラクタとどっちがいい？
 	}
 	
     protected override void fanfare() {
