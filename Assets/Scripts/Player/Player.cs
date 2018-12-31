@@ -17,6 +17,8 @@ public class Player : MonoBehaviour {
 
     private int MAXHAND = 9;
 
+    private float handCursour;
+
     public Player(){
         
     }
@@ -29,11 +31,12 @@ public class Player : MonoBehaviour {
         // this.deck = deck;
         this.hand = new List<GameObject>();
         this.cemetery = new List<Card>();
+
+        this.handCursour = -2.0f;
 	}
 
     public void initBattle(){
-        //drowCard(3);
-        drowCard(1);
+        drowCard(3);
         // TODO マリガン
         if (playFirst == false) {
             drowCard(1);
@@ -95,8 +98,11 @@ public class Player : MonoBehaviour {
     }
 
     public int getHandNum() {
-        // FIXME nullP
-        return this.hand.Count;
+        if(this.hand == null){
+            return 0;
+        }else{
+            return this.hand.Count;   
+        }
     }
 
     public void damaged(int num){
@@ -107,9 +113,12 @@ public class Player : MonoBehaviour {
     }
 
     public void addHand(Card addCard){
-        GameObject card = (GameObject)Resources.Load("Prefabs/Card/" + addCard.cardName);
-        // TODO 場所
-        Instantiate(card, new Vector3(0.0f, 2.0f, 0.0f), Quaternion.identity);
+        GameObject cardPrefab = (GameObject)Resources.Load("Prefabs/Card/" + addCard.cardName);
+
+        // Vector2 pos = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y);
+        GameObject card = Instantiate(cardPrefab, new Vector2(handCursour, -3.0f), Quaternion.identity);
+        this.handCursour += 2.0f;
+        // card.transform.parent = transform;
 
         // deckをstringにする場合
         //GameObject newCard = new GameObject("");

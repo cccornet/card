@@ -7,11 +7,17 @@ public class BattleController : MonoBehaviour {
     // private GameObject player2;
 
 	void Start () {
+        // エリア生成
+
         List<Card> deck1 = new List<Card>();
         //List<Card> deck2 = new List<Card>();
 
         // TODO deck 読み込み
-        deck1.Add(new Goblin());
+        int DECKMAX = 10;
+        for (int i = 0; i < DECKMAX; i++){
+            // TODO MonoBehaviour なのでGameObjectとして生成 deck もGameObjectに変更
+            deck1.Add(new Goblin());   
+        }
 
         bool firstPlay = Random.Range(0, 2) == 0 ? true : false;
 
