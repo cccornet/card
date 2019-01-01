@@ -7,13 +7,16 @@ public class Player : MonoBehaviour {
     private int pp;
     private int life;
     public bool playFirst { get; set; }
+
     // 候補 カード名(String), Card, GameObject
     // カード名が一番軽い コスト検索などが手間
     // Card生成 -> GameObject生成 だとCardを2回インスタンス化してる
     // デッキ全てを初めからGameObjectにするのは重そう
-    public List<Card> deck { get; set; }// 0を一番上とする
+    public List<GameObject> deck { get; set; }// 0を一番上とする
     private List<GameObject> hand;
-    private List<Card> cemetery;
+    private List<GameObject> cemetery;
+
+    public GameObject ownHandZone { get; set; }
 
     private int MAXHAND = 9;
 
@@ -30,7 +33,7 @@ public class Player : MonoBehaviour {
         // this.playFirst = playFirst;
         // this.deck = deck;
         this.hand = new List<GameObject>();
-        this.cemetery = new List<Card>();
+        this.cemetery = new List<GameObject>();
 
         this.handCursour = -2.0f;
 	}
@@ -59,7 +62,7 @@ public class Player : MonoBehaviour {
 
     private void drowCard(int n){
         for (int i = 0; i < n; i++){
-            Card drowedCard = this.deck[0];
+            GameObject drowedCard = this.deck[0];
             this.deck.RemoveAt(0);
             if(this.getHandNum() < MAXHAND){
                 this.addHand(drowedCard);
@@ -73,16 +76,17 @@ public class Player : MonoBehaviour {
     private void shuffleDeck(){
         var deckNum = this.deck.Count;
         for (int i = 0; i < deckNum; i++) {
-            Card temp = this.deck[i];
+            GameObject temp = this.deck[i];
             int randomIndex = Random.Range(0, deckNum);
             this.deck[i] = this.deck[randomIndex];
             this.deck[randomIndex] = temp;
         }
     }
 
-    public bool useCard(Card target){
-        if(target.cost <= this.pp){
-            this.pp = this.pp - target.cost;
+    public bool useCard(GameObject target){
+        int targetCost = target.GetComponent<Card>().cost;
+        if(targetCost <= this.pp){
+            this.pp = this.pp - targetCost;
             return true;
         }else{
             return false;
@@ -112,11 +116,13 @@ public class Player : MonoBehaviour {
         }
     }
 
-    public void addHand(Card addCard){
-        GameObject cardPrefab = (GameObject)Resources.Load("Prefabs/Card/" + addCard.cardName);
+    public void addHand(GameObject addCard){
+        // TODO アニメーション再生
+
+        //GameObject cardPrefab = (GameObject)Resources.Load("Prefabs/Card/" + addCard.cardName);
 
         // Vector2 pos = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y);
-        GameObject card = Instantiate(cardPrefab, new Vector2(handCursour, -3.0f), Quaternion.identity);
+        GameObject card = Instantiate(addCard, new Vector2(handCursour, -3.0f), Quaternion.identity);
         this.handCursour += 2.0f;
         // card.transform.parent = transform;
 
@@ -127,5 +133,13 @@ public class Player : MonoBehaviour {
 
     public void setFirstPlay(){
         // TODO 初回呼び出し時のみ変更可能な実装にする
+    }
+
+    public void displayHand(){
+        if (this.hand == null) {
+            return;
+        }else{
+            // TODO
+        }
     }
 }

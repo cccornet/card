@@ -9,14 +9,14 @@ public class Goblin : Follower {
     private int HEALTH = 2;
 
     public Goblin(){
+        
+    }
+
+	void Start () {
         this.cardName = this.CARDNAME;
         this.cost = this.COST;
         this.attack = this.ATTACK;
         this.health = this.HEALTH;
-    }
-
-	void Start () {
-        // コンストラクタとどっちがいい？
 	}
 	
     protected override void fanfare() {
