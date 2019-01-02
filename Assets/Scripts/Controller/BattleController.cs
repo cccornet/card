@@ -22,7 +22,6 @@ public class BattleController : MonoBehaviour {
 
         bool firstPlay = Random.Range(0, 2) == 0 ? true : false;
 
-        // this.player1 = makePlayer("Player1", deck1, firstPlay);
         this.player1 = makePlayer("Player1", deck1, true, ownHandZone);
         // コンポーネントも別の変数に入れとく？
         this.player1.GetComponent<Player>().initBattle();

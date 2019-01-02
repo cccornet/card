@@ -20,13 +20,7 @@ public class Player : MonoBehaviour {
 
     private int MAXHAND = 9;
 
-    private float handCursour;
-
     public Player(){
-        
-    }
-
-	private void Start () {
         this.maxPP = 0;
         this.pp = this.maxPP;
         this.life = 20;
@@ -34,8 +28,10 @@ public class Player : MonoBehaviour {
         // this.deck = deck;
         this.hand = new List<GameObject>();
         this.cemetery = new List<GameObject>();
+    }
 
-        this.handCursour = -2.0f;
+	private void Start () {
+        
 	}
 
     public void initBattle(){
@@ -119,12 +115,11 @@ public class Player : MonoBehaviour {
     public void addHand(GameObject addCard){
         // TODO アニメーション再生
 
-        //GameObject cardPrefab = (GameObject)Resources.Load("Prefabs/Card/" + addCard.cardName);
-
-        // Vector2 pos = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y);
-        GameObject card = Instantiate(addCard, new Vector2(handCursour, -3.0f), Quaternion.identity);
-        this.handCursour += 2.0f;
-        // card.transform.parent = transform;
+        // 子要素にする必要ない？
+        // card.transform.parent = this.ownHandZone.transform;
+        GameObject card = Instantiate(addCard, new Vector2(0, this.ownHandZone.transform.position.y), Quaternion.identity);
+        this.hand.Add(card);
+        displayHand();
 
         // deckをstringにする場合
         //GameObject newCard = new GameObject("");
@@ -139,7 +134,22 @@ public class Player : MonoBehaviour {
         if (this.hand == null) {
             return;
         }else{
-            // TODO
+            int halfHandNum = this.hand.Count / 2;
+
+            if(this.hand.Count % 2 == 0 /*偶数*/){
+                float handCursor = -0.75f + -1.5f * (halfHandNum - 1);
+                for (int i = 0; i < this.hand.Count;i++){
+                    this.hand[i].transform.position = new Vector3(handCursor, this.ownHandZone.transform.position.y, 0);
+                    handCursor += 1.5f;
+                }
+            }else/*奇数*/{
+                float handCursor = -1.5f * halfHandNum;
+                for (int i = 0; i < this.hand.Count; i++) {
+                    this.hand[i].transform.position = new Vector3(handCursor, this.ownHandZone.transform.position.y, 0);
+                    handCursor += 1.5f;
+                }
+            }
+
         }
     }
 }
