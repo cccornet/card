@@ -9,6 +9,8 @@ public class BattleController : MonoBehaviour {
 	void Start () {
         // エリア生成
         GameObject ownHandZone = (GameObject)Resources.Load("Prefabs/Zone/OwnHandZone");
+        GameObject ownBattleZone = (GameObject)Resources.Load("Prefabs/Zone/OwnBattleZone");
+        // TODO インスタンス化
 
         List<GameObject> deck1 = new List<GameObject>();
         //List<Card> deck2 = new List<Card>();
