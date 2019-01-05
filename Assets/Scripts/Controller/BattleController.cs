@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class BattleController : MonoBehaviour {
 
+    [SerializeField]
+    private GameObject playerInfoManager;
+
     private GameObject player1;
     // private GameObject player2;
 
@@ -26,21 +29,16 @@ public class BattleController : MonoBehaviour {
 
         this.player1 = makePlayer("Player1", deck1, true, ownHandZone);
         // コンポーネントも別の変数に入れとく？
+
+        this.playerInfoManager.GetComponent<PlayerInfoManager>().player1 = this.player1;
+
         this.player1.GetComponent<Player>().initBattle();
 
 	}
 	
 	void Update () {
-        setPlayerInfo(player1);
-        //setPlayerInfo(player2);
+        
 	}
-
-    private void setPlayerInfo(GameObject player){
-        // TODO set
-        // player.getDeckNum();
-        // player.getCemeteryNum();
-        // player.getHandNum();
-    }
 
     private GameObject makePlayer(string playerName, List<GameObject> deck, bool firstPlay, GameObject ownHandZone){
         GameObject player = new GameObject("Player1");

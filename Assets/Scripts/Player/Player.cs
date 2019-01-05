@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
 
-    private int maxPP;
-    private int pp;
+    public int maxPP { get; private set; } // ppブースト系はメソッド作成
+    public int pp { get; private set; } // 回復はメソッド作成
     private int life;
     public bool playFirst { get; set; }
 
