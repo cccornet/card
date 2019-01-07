@@ -79,10 +79,17 @@ public class Player : MonoBehaviour {
         }
     }
 
-    public bool useCard(GameObject target){
-        int targetCost = target.GetComponent<Card>().cost;
-        if(targetCost <= this.pp){
-            this.pp = this.pp - targetCost;
+    public bool useCard(GameObject targetCard){
+        if(enableCard(targetCard.GetComponent<Card>())){
+            this.pp = this.pp - targetCard.GetComponent<Card>().cost;
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public bool enableCard(Card targetCard){
+        if(targetCard.cost <= this.pp){
             return true;
         }else{
             return false;

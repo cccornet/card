@@ -9,7 +9,9 @@ abstract public class Card : MonoBehaviour {
 
     private Vector3 beginPos;
 
-    public void OnBeginDrag() {
+    protected GameObject own;
+
+	public void OnBeginDrag() {
         this.beginPos = this.transform.position;
 
         // cost チェック
@@ -17,9 +19,13 @@ abstract public class Card : MonoBehaviour {
     }
 
     public void OnDrag() {
-        Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        worldMousePos.z = 0;/* 2D座標に合わせる */
-        this.transform.position = worldMousePos;
+        if(this.own.GetComponent<Player>().enableCard(this) /*  and inMyTurn */){
+            Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            worldMousePos.z = 0;/* 2D座標に合わせる */
+            this.transform.position = worldMousePos;
+        }else{
+            return;// TODO ポップアップ ppが不足しています
+        }
     }
 
     public void OnEndDrag(){

@@ -13,6 +13,8 @@ public class Goblin : Follower {
     }
 
 	void Start () {
+        this.own = GameObject.Find("Player1");
+
         this.cardName = this.CARDNAME;
         this.cost = this.COST;
         this.attack = this.ATTACK;

@@ -34,6 +34,8 @@ public class BattleController : MonoBehaviour {
 
         this.player1.GetComponent<Player>().initBattle();
 
+        // TODO initTurn
+        // TODO addField
 	}
 	
 	void Update () {
