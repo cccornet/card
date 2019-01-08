@@ -16,7 +16,7 @@ public class PlayerInfoManager : MonoBehaviour {
     // public GameObject player2;
 
 	void Start () {
-        this.player1 = null;
+       
 	}
 
 	void Update () {

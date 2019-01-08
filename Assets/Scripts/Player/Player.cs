@@ -20,6 +20,8 @@ public class Player : MonoBehaviour {
 
     private int MAXHAND = 9;
 
+    public bool myTurn { get; private set; }
+
     public Player(){
         this.maxPP = 0;
         this.pp = this.maxPP;
@@ -28,6 +30,7 @@ public class Player : MonoBehaviour {
         // this.deck = deck;
         this.hand = new List<GameObject>();
         this.cemetery = new List<GameObject>();
+        this.myTurn = false;
     }
 
 	private void Start () {
@@ -42,10 +45,15 @@ public class Player : MonoBehaviour {
         }
     }
 	
-    private void initTurn(){
+    public void startMyTurn(){
         incrementPP();
         this.pp = this.maxPP;
         drowCard(1);
+        this.myTurn = true;
+    }
+
+    public void endMyTurn(){
+        this.myTurn = false;
     }
 
     private void incrementPP(){

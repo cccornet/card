@@ -13,13 +13,15 @@ abstract public class Card : MonoBehaviour {
 
 	public void OnBeginDrag() {
         this.beginPos = this.transform.position;
-
-        // cost チェック
-        // OnDrag()を呼ばない
     }
 
     public void OnDrag() {
-        if(this.own.GetComponent<Player>().enableCard(this) /*  and inMyTurn */){
+        // 自分のターンでないと動かせない
+        if(!(this.own.GetComponent<Player>().myTurn)){
+            return;
+        }
+
+        if(this.own.GetComponent<Player>().enableCard(this)){
             Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             worldMousePos.z = 0;/* 2D座標に合わせる */
             this.transform.position = worldMousePos;
