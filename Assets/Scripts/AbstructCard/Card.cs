@@ -13,8 +13,17 @@ abstract public class Card : MonoBehaviour {
 
     private bool inHandZone;
 
+    private bool canDrag;
+
 	public void OnBeginDrag() {
         this.beginPos = this.transform.position;
+
+        // 手札にないと動かせない
+        if(this.inHandZone){
+            canDrag = true;
+        }else{
+            canDrag = false;
+        }
     }
 
     public void OnDrag() {
@@ -23,9 +32,7 @@ abstract public class Card : MonoBehaviour {
             return;
         }
 
-        // 手札にないと動かせない
-        // FIXME ドラッグの動きが見えない, 手札以外でも動かせる
-        if (!(this.inHandZone)) {
+        if (!(canDrag)) {
             return;
         }
 
@@ -39,23 +46,27 @@ abstract public class Card : MonoBehaviour {
     }
 
     public void OnEndDrag(){
-        if(this.inHandZone){
+
+        if (!(canDrag)) {
+            return;
+        }
+
+        if(this.inHandZone/*手札に戻した時*/){
             this.transform.position = this.beginPos;
-        }else{
+        }else/*場に出す時*/{
+            this.own.GetComponent<Player>().useCard(this);
             this.own.GetComponent<Player>().removeHand(this.gameObject);
             this.own.GetComponent<Player>().addBattleZone(this.gameObject);
-         // TODO pp減らす
         }
     }
 
-	private void OnCollisionEnter2D(Collision2D collision) {
-        // FIXME 当たり判定がうまくいっていない
-
-        // とりあえずレイヤー判定で
+	private void OnTriggerEnter2D(Collider2D collision) {
+        // 手札エリアに入っている
         this.inHandZone = true;
 	}
 
-	private void OnCollisionExit(Collision collision) {
+    private void OnTriggerExit2D(Collider2D collision){
         this.inHandZone = false;
-	}
+    }
+
 }

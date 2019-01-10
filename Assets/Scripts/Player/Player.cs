@@ -90,9 +90,9 @@ public class Player : MonoBehaviour {
         }
     }
 
-    public bool useCard(GameObject targetCard){
-        if(enableCard(targetCard.GetComponent<Card>())){
-            this.pp = this.pp - targetCard.GetComponent<Card>().cost;
+    public bool useCard(Card targetCard){
+        if(enableCard(targetCard)){
+            this.pp = this.pp - targetCard.cost;
             return true;
         }else{
             return false;
@@ -154,6 +154,11 @@ public class Player : MonoBehaviour {
         // TODO アニメーション再生
 
         this.battleZone.Add(addCard);
+        displayZone("battleZone");
+    }
+
+    public void removeBattleZone(GameObject removeCard) {
+        this.battleZone.Remove(removeCard);
         displayZone("battleZone");
     }
 
