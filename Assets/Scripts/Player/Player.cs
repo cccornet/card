@@ -14,9 +14,11 @@ public class Player : MonoBehaviour {
     // デッキ全てを初めからGameObjectにするのは重そう
     public List<GameObject> deck { get; set; }// 0を一番上とする
     private List<GameObject> hand;
+    private List<GameObject> battleZone;
     private List<GameObject> cemetery;
 
     public GameObject ownHandZone { get; set; }
+    public GameObject ownBattleZone { get; set; }
 
     private int MAXHAND = 9;
 
@@ -29,6 +31,7 @@ public class Player : MonoBehaviour {
         // this.playFirst = playFirst;
         // this.deck = deck;
         this.hand = new List<GameObject>();
+        this.battleZone = new List<GameObject>();
         this.cemetery = new List<GameObject>();
         this.myTurn = false;
     }
@@ -112,6 +115,10 @@ public class Player : MonoBehaviour {
         return this.cemetery.Count;
     }
 
+    public int getBattleFiledNum() {
+        return this.battleZone.Count;
+    }
+
     public int getHandNum() {
         if(this.hand == null){
             return 0;
@@ -132,39 +139,83 @@ public class Player : MonoBehaviour {
 
         // 子要素にする必要ない？
         // card.transform.parent = this.ownHandZone.transform;
+        // TODO デッキ以外の挙動
         GameObject card = Instantiate(addCard, new Vector2(0, this.ownHandZone.transform.position.y), Quaternion.identity);
         this.hand.Add(card);
-        displayHand();
+        displayZone("hand");
+    }
 
-        // deckをstringにする場合
-        //GameObject newCard = new GameObject("");
-        //newCard.AddComponent<Goblin>();
+    public void removeHand(GameObject removeCard){
+        this.hand.Remove(removeCard);
+        displayZone("hand");
+    }
+
+    public void addBattleZone(GameObject addCard) {
+        // TODO アニメーション再生
+
+        this.battleZone.Add(addCard);
+        displayZone("battleZone");
     }
 
     public void setFirstPlay(){
         // TODO 初回呼び出し時のみ変更可能な実装にする
     }
 
-    public void displayHand(){
-        if (this.hand == null) {
-            return;
-        }else{
-            int halfHandNum = this.hand.Count / 2;
+    public void displayZone(string zone){
+        List<GameObject> target = new List<GameObject>();
+        GameObject targetZone = null;
+        if(zone == "hand"){
+            target = this.hand;
+            targetZone = this.ownHandZone;
+        }else if(zone == "battleZone"){
+            target = this.battleZone;
+            targetZone = this.ownBattleZone;
+        }
 
-            if(this.hand.Count % 2 == 0 /*偶数*/){
-                float handCursor = -0.75f + -1.5f * (halfHandNum - 1);
-                for (int i = 0; i < this.hand.Count;i++){
-                    this.hand[i].transform.position = new Vector3(handCursor, this.ownHandZone.transform.position.y, 0);
-                    handCursor += 1.5f;
+        if (target == null){
+            return;
+        }else {
+            int halfTargetNum = target.Count / 2;
+
+            if (target.Count % 2 == 0 /*偶数*/) {
+                float targetCursor = -0.75f + -1.5f * (halfTargetNum - 1);
+                for (int i = 0; i < target.Count; i++) {
+                    target[i].transform.position = new Vector3(targetCursor, targetZone.transform.position.y, 0);
+                    targetCursor += 1.5f;
                 }
-            }else/*奇数*/{
-                float handCursor = -1.5f * halfHandNum;
-                for (int i = 0; i < this.hand.Count; i++) {
-                    this.hand[i].transform.position = new Vector3(handCursor, this.ownHandZone.transform.position.y, 0);
-                    handCursor += 1.5f;
+            }
+            else/*奇数*/{
+                float targetCursor = -1.5f * halfTargetNum;
+                for (int i = 0; i < target.Count; i++) {
+                    target[i].transform.position = new Vector3(targetCursor, targetZone.transform.position.y, 0);
+                    targetCursor += 1.5f;
                 }
             }
 
         }
+
     }
+
+    //public void displayHand(){
+    //    if (this.hand == null) {
+    //        return;
+    //    }else{
+    //        int halfHandNum = this.hand.Count / 2;
+
+    //        if(this.hand.Count % 2 == 0 /*偶数*/){
+    //            float handCursor = -0.75f + -1.5f * (halfHandNum - 1);
+    //            for (int i = 0; i < this.hand.Count;i++){
+    //                this.hand[i].transform.position = new Vector3(handCursor, this.ownHandZone.transform.position.y, 0);
+    //                handCursor += 1.5f;
+    //            }
+    //        }else/*奇数*/{
+    //            float handCursor = -1.5f * halfHandNum;
+    //            for (int i = 0; i < this.hand.Count; i++) {
+    //                this.hand[i].transform.position = new Vector3(handCursor, this.ownHandZone.transform.position.y, 0);
+    //                handCursor += 1.5f;
+    //            }
+    //        }
+
+    //    }
+    //}
 }

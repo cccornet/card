@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4041095478605560}
   - component: {fileID: 61061014636892738}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: OwnHandZone
   m_TagString: Untagged
   m_Icon: {fileID: 0}

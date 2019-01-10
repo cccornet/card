@@ -12,8 +12,9 @@ public class BattleController : MonoBehaviour {
 	void Start () {
         // エリア生成
         GameObject ownHandZone = (GameObject)Resources.Load("Prefabs/Zone/OwnHandZone");
+        Instantiate(ownHandZone, new Vector2(0, -4), Quaternion.identity);
         GameObject ownBattleZone = (GameObject)Resources.Load("Prefabs/Zone/OwnBattleZone");
-        // TODO インスタンス化
+        Instantiate(ownBattleZone, new Vector2(0, -1), Quaternion.identity);
 
         List<GameObject> deck1 = new List<GameObject>();
         //List<Card> deck2 = new List<Card>();
@@ -27,7 +28,7 @@ public class BattleController : MonoBehaviour {
 
         bool firstPlay = Random.Range(0, 2) == 0 ? true : false;
 
-        this.player1 = makePlayer("Player1", deck1, true, ownHandZone);
+        this.player1 = makePlayer("Player1", deck1, true, ownHandZone, ownBattleZone);
         // コンポーネントも別の変数に入れとく？
 
         this.playerInfoManager.GetComponent<PlayerInfoManager>().player1 = this.player1;
@@ -42,12 +43,13 @@ public class BattleController : MonoBehaviour {
         
 	}
 
-    private GameObject makePlayer(string playerName, List<GameObject> deck, bool firstPlay, GameObject ownHandZone){
+    private GameObject makePlayer(string playerName, List<GameObject> deck, bool firstPlay, GameObject ownHandZone, GameObject ownBattleZone){
         GameObject player = new GameObject("Player1");
         player.AddComponent<Player>();
         player.GetComponent<Player>().deck = deck;
         player.GetComponent<Player>().playFirst = firstPlay;
         player.GetComponent<Player>().ownHandZone = ownHandZone;
+        player.GetComponent<Player>().ownBattleZone = ownBattleZone;
         return player;
     }
 }
