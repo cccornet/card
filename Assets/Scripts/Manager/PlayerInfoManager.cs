@@ -11,6 +11,8 @@ public class PlayerInfoManager : MonoBehaviour {
     private GameObject cemeteryNumObject;
     [SerializeField]
     private GameObject ppNumObject;
+    [SerializeField]
+    private GameObject lifeNumObject;
 
     public GameObject player1 { get; set; }
     // public GameObject player2;
@@ -39,5 +41,8 @@ public class PlayerInfoManager : MonoBehaviour {
         // pp
         Text ppNumText = ppNumObject.GetComponent<Text>();
         ppNumText.text = "PP : " + player.GetComponent<Player>().pp + " / " + player.GetComponent<Player>().maxPP;
+        // life とりあえずここで
+        Text lifeNumText = lifeNumObject.GetComponent<Text>();
+        lifeNumText.text = "Life : " + player.GetComponent<Player>().life;
     }
 }

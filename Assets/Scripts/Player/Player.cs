@@ -5,7 +5,7 @@ public class Player : MonoBehaviour {
 
     public int maxPP { get; private set; } // ppブースト系はメソッド作成
     public int pp { get; private set; } // 回復はメソッド作成
-    private int life;
+    public int life { get; set; }
     public bool playFirst { get; set; }
 
     // 候補 カード名(String), Card, GameObject
