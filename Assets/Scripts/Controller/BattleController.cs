@@ -52,4 +52,30 @@ public class BattleController : MonoBehaviour {
         player.GetComponent<Player>().ownBattleZone = ownBattleZone;
         return player;
     }
+
+
+    // 直接Playerの関数呼ぶよりこっちの方が良さげ もう少しうまくアクセスしたい
+    public bool myTurn(){
+        return this.player1.GetComponent<Player>().myTurn;
+    }
+
+    public bool enableCard(Card targetCard) {
+        return this.player1.GetComponent<Player>().enableCard(targetCard);
+    }
+
+    public void useCard(Card targetCard) {
+        this.player1.GetComponent<Player>().useCard(targetCard);
+    }
+
+    public void removeHand(GameObject removeCard){
+        this.player1.GetComponent<Player>().removeHand(removeCard);
+    }
+
+    public void addBattleZone(GameObject addCard){
+        this.player1.GetComponent<Player>().addBattleZone(addCard);
+    }
+
+    public void endTurn(){
+        this.player1.GetComponent<Player>().endMyTurn();
+    }
 }

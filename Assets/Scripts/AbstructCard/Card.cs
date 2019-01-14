@@ -10,6 +10,8 @@ abstract public class Card : MonoBehaviour {
     private Vector3 beginPos;
 
     protected GameObject own;
+    // 静的に決める方法考え中
+    // protected GameObject battleController;
 
     private bool inHandZone;
 
@@ -28,6 +30,7 @@ abstract public class Card : MonoBehaviour {
 
     public void OnDrag() {
         // 自分のターンでないと動かせない
+
         if(!(this.own.GetComponent<Player>().myTurn)){
             return;
         }
