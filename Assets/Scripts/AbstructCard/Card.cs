@@ -14,11 +14,16 @@ abstract public class Card : MonoBehaviour {
     // protected GameObject battleController;
 
     private bool inHandZone;
+    private bool inBattleZone;
 
     private bool canDrag;
 
 	public void OnBeginDrag() {
         this.beginPos = this.transform.position;
+
+        if(this.inBattleZone){
+            // TODO 攻撃対象の矢印を出したい
+        }
 
         // 手札にないと動かせない
         if(this.inHandZone){
@@ -60,16 +65,26 @@ abstract public class Card : MonoBehaviour {
             this.own.GetComponent<Player>().useCard(this);
             this.own.GetComponent<Player>().removeHand(this.gameObject);
             this.own.GetComponent<Player>().addBattleZone(this.gameObject);
+
+            this.inHandZone = true;
         }
     }
 
 	private void OnTriggerEnter2D(Collider2D collision) {
-        // 手札エリアに入っている
-        this.inHandZone = true;
+
+        if (collision.tag == "ownHandZone") {
+            // 手札エリアに入っている
+            this.inHandZone = true;
+        }
+
 	}
 
     private void OnTriggerExit2D(Collider2D collision){
-        this.inHandZone = false;
+
+        if (collision.tag == "ownHandZone") {
+            this.inHandZone = false;
+        }
+
     }
 
 }

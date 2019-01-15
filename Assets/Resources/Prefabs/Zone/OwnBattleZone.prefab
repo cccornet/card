@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4373445200122200}
   - component: {fileID: 61702350939065514}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: OwnBattleZone
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -363,7 +363,8 @@ CanvasRenderer:
 --- !u!1 &1017450238
 GameObject:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_PrefabParentObject: {fileID: 1134158055559978, guid: 0eba3d27890514206ab38b0a39484d07,
+    type: 2}
   m_PrefabInternal: {fileID: 0}
   serializedVersion: 5
   m_Component:
@@ -371,7 +372,7 @@ GameObject:
   - component: {fileID: 1017450239}
   m_Layer: 0
   m_Name: BattleController
-  m_TagString: Untagged
+  m_TagString: BattleController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -379,7 +380,8 @@ GameObject:
 --- !u!114 &1017450239
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_PrefabParentObject: {fileID: 114373462291412204, guid: 0eba3d27890514206ab38b0a39484d07,
+    type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1017450238}
   m_Enabled: 1
@@ -391,7 +393,8 @@ MonoBehaviour:
 --- !u!4 &1017450240
 Transform:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_PrefabParentObject: {fileID: 4512426100440802, guid: 0eba3d27890514206ab38b0a39484d07,
+    type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1017450238}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
