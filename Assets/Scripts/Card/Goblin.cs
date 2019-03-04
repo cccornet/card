@@ -19,6 +19,8 @@ public class Goblin : Follower {
         this.cost = this.COST;
         this.attack = this.ATTACK;
         this.health = this.HEALTH;
+
+        this.canAttack = false;
 	}
 	
     protected override void fanfare() {

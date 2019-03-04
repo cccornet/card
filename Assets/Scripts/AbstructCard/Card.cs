@@ -14,33 +14,26 @@ abstract public class Card : MonoBehaviour {
     // protected GameObject battleController;
 
     private bool inHandZone;
-    private bool inBattleZone;
-
-    private bool canDrag;
+    //private bool inBattleZone;
 
 	public void OnBeginDrag() {
         this.beginPos = this.transform.position;
 
-        if(this.inBattleZone){
+        if(!(this.own.GetComponent<Player>().inBattleZone(this.gameObject))){
             // TODO 攻撃対象の矢印を出したい
         }
 
-        // 手札にないと動かせない
-        if(this.inHandZone){
-            canDrag = true;
-        }else{
-            canDrag = false;
-        }
     }
 
     public void OnDrag() {
+        
         // 自分のターンでないと動かせない
-
         if(!(this.own.GetComponent<Player>().myTurn)){
             return;
         }
 
-        if (!(canDrag)) {
+        // 手札にないと動かせない
+        if (!(this.own.GetComponent<Player>().inHand(this.gameObject))) {
             return;
         }
 
@@ -55,23 +48,34 @@ abstract public class Card : MonoBehaviour {
 
     public void OnEndDrag(){
 
-        if (!(canDrag)) {
+        // 自分のターンでないと動かせない
+        if (!(this.own.GetComponent<Player>().myTurn)) {
+            return;
+        }
+
+        // 手札にないと動かせない
+        if (!(this.own.GetComponent<Player>().inHand(this.gameObject))) {
+            return;
+        }
+
+        // ppが不足していると動かせない
+        if (!(this.own.GetComponent<Player>().enableCard(this))) {
             return;
         }
 
         if(this.inHandZone/*手札に戻した時*/){
             this.transform.position = this.beginPos;
         }else/*場に出す時*/{
+            // TODO スペル
+
             this.own.GetComponent<Player>().useCard(this);
             this.own.GetComponent<Player>().removeHand(this.gameObject);
             this.own.GetComponent<Player>().addBattleZone(this.gameObject);
-
-            this.inHandZone = true;
         }
     }
 
 	private void OnTriggerEnter2D(Collider2D collision) {
-
+        
         if (collision.tag == "ownHandZone") {
             // 手札エリアに入っている
             this.inHandZone = true;
@@ -80,7 +84,7 @@ abstract public class Card : MonoBehaviour {
 	}
 
     private void OnTriggerExit2D(Collider2D collision){
-
+        
         if (collision.tag == "ownHandZone") {
             this.inHandZone = false;
         }

@@ -4,10 +4,16 @@ using UnityEngine;
 
 public class TurnEndButton : MonoBehaviour {
 
-    public void OnClick() {
-        Debug.Log("Turn end");
+    private GameObject battleController;
 
-        // TODO player.GetComponent<Player>().endMyTurn();
+	void Start() {
+        this.battleController = GameObject.FindGameObjectsWithTag("BattleController")[0];
+	}
+
+	public void OnClick() {
+        
+        this.battleController.GetComponent<BattleController>().endTurn();
+
         // TODO setActive 親要素から
     }
 }

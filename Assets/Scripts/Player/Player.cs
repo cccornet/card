@@ -8,10 +8,6 @@ public class Player : MonoBehaviour {
     public int life { get; set; }
     public bool playFirst { get; set; }
 
-    // 候補 カード名(String), Card, GameObject
-    // カード名が一番軽い コスト検索などが手間
-    // Card生成 -> GameObject生成 だとCardを2回インスタンス化してる
-    // デッキ全てを初めからGameObjectにするのは重そう
     public List<GameObject> deck { get; set; }// 0を一番上とする
     private List<GameObject> hand;
     private List<GameObject> battleZone;
@@ -53,6 +49,7 @@ public class Player : MonoBehaviour {
         this.pp = this.maxPP;
         drowCard(1);
         this.myTurn = true;
+        wakeUpFollowers();
     }
 
     public void endMyTurn(){
@@ -69,6 +66,12 @@ public class Player : MonoBehaviour {
 
     private void drowCard(int n){
         for (int i = 0; i < n; i++){
+            
+            if(this.deck.Count == 0){
+                // TODO 敗北
+                return;
+            }
+
             GameObject drowedCard = this.deck[0];
             this.deck.RemoveAt(0);
             if(this.getHandNum() < MAXHAND){
@@ -100,11 +103,17 @@ public class Player : MonoBehaviour {
     }
 
     public bool enableCard(Card targetCard){
-        if(targetCard.cost <= this.pp){
-            return true;
-        }else{
+        
+        if (targetCard.cost > this.pp) {
             return false;
+        }else if(targetCard is Follower && this.battleZone.Count >= 5) {
+            // 場が埋まっている時、フォロワーはプレイできない
+            // TODO アミュレット
+            return false;
+        }else{
+            return true; 
         }
+
     }
 
     public int getDeckNum(){
@@ -150,6 +159,14 @@ public class Player : MonoBehaviour {
         displayZone("hand");
     }
 
+    public bool inHand(GameObject targetCard){
+        if(this.hand.IndexOf(targetCard) > -1){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     public void addBattleZone(GameObject addCard) {
         // TODO アニメーション再生
 
@@ -160,6 +177,15 @@ public class Player : MonoBehaviour {
     public void removeBattleZone(GameObject removeCard) {
         this.battleZone.Remove(removeCard);
         displayZone("battleZone");
+    }
+
+    public bool inBattleZone(GameObject targetCard) {
+        if (this.battleZone.IndexOf(targetCard) > -1) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     public void setFirstPlay(){
@@ -199,6 +225,13 @@ public class Player : MonoBehaviour {
 
         }
 
+    }
+
+    public void wakeUpFollowers(){
+        // 場のフォロワーを攻撃可能にする
+        foreach(GameObject follower in this.battleZone){
+            follower.GetComponent<Follower>().canAttack = true;
+        }
     }
 
     //public void displayHand(){

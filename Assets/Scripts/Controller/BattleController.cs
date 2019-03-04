@@ -76,6 +76,10 @@ public class BattleController : MonoBehaviour {
     }
 
     public void endTurn(){
+        Debug.Log("Turn end");
         this.player1.GetComponent<Player>().endMyTurn();
+
+        // TODO player入れ替え
+        this.player1.GetComponent<Player>().startMyTurn();
     }
 }
