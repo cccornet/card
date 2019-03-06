@@ -7,7 +7,7 @@ public class BattleController : MonoBehaviour {
     private GameObject playerInfoManager;
 
     private GameObject player1;
-    // private GameObject player2;
+    private GameObject player2;
 
 	void Start () {
         // エリア生成
@@ -15,25 +15,34 @@ public class BattleController : MonoBehaviour {
         Instantiate(ownHandZone, new Vector2(0, -4), Quaternion.identity);
         GameObject ownBattleZone = (GameObject)Resources.Load("Prefabs/Zone/OwnBattleZone");
         Instantiate(ownBattleZone, new Vector2(0, -1), Quaternion.identity);
+        GameObject opponentHandZone = (GameObject)Resources.Load("Prefabs/Zone/OpponentHandZone");
+        Instantiate(opponentHandZone, new Vector2(-4, 4), Quaternion.identity);
+        GameObject opponentBattleZone = (GameObject)Resources.Load("Prefabs/Zone/OpponentBattleZone");
+        Instantiate(opponentBattleZone, new Vector2(0, 1), Quaternion.identity);
 
         List<GameObject> deck1 = new List<GameObject>();
-        //List<Card> deck2 = new List<Card>();
+        List<GameObject> deck2 = new List<GameObject>();
 
         // TODO deck 読み込み
         int DECKMAX = 10;
         for (int i = 0; i < DECKMAX; i++){
             deck1.Add((GameObject)Resources.Load("Prefabs/Card/" + "Goblin"));
+            deck2.Add((GameObject)Resources.Load("Prefabs/Card/" + "Goblin"));
             // deckエリアの子要素？
         }
 
-        bool firstPlay = Random.Range(0, 2) == 0 ? true : false;
+        // 先攻後攻決め
+        // bool firstPlay = Random.Range(0, 2) == 0 ? true : false;
 
         this.player1 = makePlayer("Player1", deck1, true, ownHandZone, ownBattleZone);
+        this.player2 = makePlayer("Player2", deck2, false, opponentHandZone, opponentBattleZone);
         // コンポーネントも別の変数に入れとく？
 
         this.playerInfoManager.GetComponent<PlayerInfoManager>().player1 = this.player1;
+        this.playerInfoManager.GetComponent<PlayerInfoManager>().player2 = this.player2;
 
         this.player1.GetComponent<Player>().initBattle();
+        this.player2.GetComponent<Player>().initBattle();
 
         this.player1.GetComponent<Player>().startMyTurn();
 
@@ -44,8 +53,10 @@ public class BattleController : MonoBehaviour {
 	}
 
     private GameObject makePlayer(string playerName, List<GameObject> deck, bool firstPlay, GameObject ownHandZone, GameObject ownBattleZone){
-        GameObject player = new GameObject("Player1");
+        // FIXME
+        GameObject player = new GameObject(playerName);
         player.AddComponent<Player>();
+
         player.GetComponent<Player>().deck = deck;
         player.GetComponent<Player>().playFirst = firstPlay;
         player.GetComponent<Player>().ownHandZone = ownHandZone;

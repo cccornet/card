@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - BattleController
+  - ownHandZone
+  - ownBattleZone
   layers:
   - Default
   - TransparentFX

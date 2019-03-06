@@ -208,18 +208,23 @@ public class Player : MonoBehaviour {
         }else {
             int halfTargetNum = target.Count / 2;
 
+            // FIXME 変数名
+            float cardSize = targetZone.transform.localScale.x / 6;
+            float center = targetZone.transform.position.x;
+            // 相手のカードサイズ変更する？
+
             if (target.Count % 2 == 0 /*偶数*/) {
-                float targetCursor = -0.75f + -1.5f * (halfTargetNum - 1);
+                float targetCursor = center + -cardSize / 2 + -cardSize * (halfTargetNum - 1);
                 for (int i = 0; i < target.Count; i++) {
                     target[i].transform.position = new Vector3(targetCursor, targetZone.transform.position.y, 0);
-                    targetCursor += 1.5f;
+                    targetCursor += cardSize;
                 }
             }
             else/*奇数*/{
-                float targetCursor = -1.5f * halfTargetNum;
+                float targetCursor = center + -cardSize * halfTargetNum;
                 for (int i = 0; i < target.Count; i++) {
                     target[i].transform.position = new Vector3(targetCursor, targetZone.transform.position.y, 0);
-                    targetCursor += 1.5f;
+                    targetCursor += cardSize;
                 }
             }
 
@@ -234,26 +239,4 @@ public class Player : MonoBehaviour {
         }
     }
 
-    //public void displayHand(){
-    //    if (this.hand == null) {
-    //        return;
-    //    }else{
-    //        int halfHandNum = this.hand.Count / 2;
-
-    //        if(this.hand.Count % 2 == 0 /*偶数*/){
-    //            float handCursor = -0.75f + -1.5f * (halfHandNum - 1);
-    //            for (int i = 0; i < this.hand.Count;i++){
-    //                this.hand[i].transform.position = new Vector3(handCursor, this.ownHandZone.transform.position.y, 0);
-    //                handCursor += 1.5f;
-    //            }
-    //        }else/*奇数*/{
-    //            float handCursor = -1.5f * halfHandNum;
-    //            for (int i = 0; i < this.hand.Count; i++) {
-    //                this.hand[i].transform.position = new Vector3(handCursor, this.ownHandZone.transform.position.y, 0);
-    //                handCursor += 1.5f;
-    //            }
-    //        }
-
-    //    }
-    //}
 }
