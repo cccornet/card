@@ -235,7 +235,7 @@ public class Player : MonoBehaviour {
     public void wakeUpFollowers(){
         // 場のフォロワーを攻撃可能にする
         foreach(GameObject follower in this.battleZone){
-            follower.GetComponent<Follower>().canAttack = true;
+            follower.GetComponent<Follower>().enableAttack();
         }
     }
 

@@ -21,6 +21,8 @@ public class Goblin : Follower {
         this.health = this.HEALTH;
 
         this.canAttack = false;
+
+        base.addEventTrigger();
 	}
 	
     protected override void fanfare() {
