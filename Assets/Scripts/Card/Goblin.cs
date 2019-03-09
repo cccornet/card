@@ -12,8 +12,8 @@ public class Goblin : Follower {
         
     }
 
-	void Start () {
-        this.own = GameObject.Find("Player1");
+    protected override void Start () {
+        base.Start();
 
         this.cardName = this.CARDNAME;
         this.cost = this.COST;
@@ -21,8 +21,6 @@ public class Goblin : Follower {
         this.health = this.HEALTH;
 
         this.canAttack = false;
-
-        base.addEventTrigger();
 	}
 	
     protected override void fanfare() {
@@ -36,4 +34,5 @@ public class Goblin : Follower {
     protected override void effect () {
 		// 能力なし
 	}
+
 }

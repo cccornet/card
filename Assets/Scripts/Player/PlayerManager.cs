@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour {
+public class PlayerManager : MonoBehaviour {
 
     public int maxPP { get; private set; } // ppブースト系はメソッド作成
     public int pp { get; private set; } // 回復はメソッド作成
@@ -20,7 +20,7 @@ public class Player : MonoBehaviour {
 
     public bool myTurn { get; private set; }
 
-    public Player(){
+    public PlayerManager(){
         this.maxPP = 0;
         this.pp = this.maxPP;
         this.life = 20;
@@ -179,14 +179,14 @@ public class Player : MonoBehaviour {
         displayZone("battleZone");
     }
 
-    public bool inBattleZone(GameObject targetCard) {
-        if (this.battleZone.IndexOf(targetCard) > -1) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
+    //public bool inBattleZone(GameObject targetCard) {
+    //    if (this.battleZone.IndexOf(targetCard) > -1) {
+    //        return true;
+    //    }
+    //    else {
+    //        return false;
+    //    }
+    //}
 
     public void setFirstPlay(){
         // TODO 初回呼び出し時のみ変更可能な実装にする
@@ -236,6 +236,12 @@ public class Player : MonoBehaviour {
         // 場のフォロワーを攻撃可能にする
         foreach(GameObject follower in this.battleZone){
             follower.GetComponent<Follower>().enableAttack();
+        }
+    }
+
+    public void changeHandBackSprite(){
+        foreach (GameObject card in this.hand) {
+            card.GetComponent<Card>().changeBackSprite();
         }
     }
 

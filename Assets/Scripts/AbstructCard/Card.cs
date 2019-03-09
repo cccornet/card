@@ -7,14 +7,30 @@ abstract public class Card : MonoBehaviour {
     protected Sprite sprite;
     protected string text;
 
-    private Vector3 beginPos;
+    protected Vector3 beginPos;
 
     protected GameObject own;
     // 静的に決める方法考え中
     // protected GameObject battleController;
 
     private bool inHandZone;
-	//private bool inBattleZone;
+    //private bool inBattleZone;
+    protected bool attackOpponent;
+
+    private SpriteRenderer mainSpriteRenderer;
+    private Sprite mainSprite;
+    [SerializeField]
+    private Sprite backSprite;
+
+    protected virtual void Start(){
+        this.mainSpriteRenderer = this.gameObject.GetComponent<SpriteRenderer>();
+
+        // FIXME
+        this.own = GameObject.Find("Player1");
+
+        addEventTrigger();
+
+    }
 
     protected void addEventTrigger(){
         this.gameObject.AddComponent<EventTrigger>();
@@ -45,28 +61,25 @@ abstract public class Card : MonoBehaviour {
 
     }
 
+    protected abstract void addBattleZoneDrag();
+
 	public void OnBeginDragInHand() {
         this.beginPos = this.transform.position;
-
-        if(!(this.own.GetComponent<Player>().inBattleZone(this.gameObject))){
-            // TODO 攻撃対象の矢印を出したい
-        }
-
     }
 
     public void OnDragInHand() {
 
         // 自分のターンでないと動かせない
-        if (!(this.own.GetComponent<Player>().myTurn)) {
+        if (!(this.own.GetComponent<PlayerManager>().myTurn)) {
             return;
         }
 
         // FIXME 手札にないと動かせない
-        if (!(this.own.GetComponent<Player>().inHand(this.gameObject))) {
-            return;
-        }
+        //if (!(this.own.GetComponent<Player>().inHand(this.gameObject))) {
+        //    return;
+        //}
 
-        if (this.own.GetComponent<Player>().enableCard(this)) {
+        if (this.own.GetComponent<PlayerManager>().enableCard(this)) {
             Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             worldMousePos.z = 0;/* 2D座標に合わせる */
             this.transform.position = worldMousePos;
@@ -79,17 +92,17 @@ abstract public class Card : MonoBehaviour {
     public void OnEndDragInHand(){
 
         // 自分のターンでないと動かせない
-        if (!(this.own.GetComponent<Player>().myTurn)) {
+        if (!(this.own.GetComponent<PlayerManager>().myTurn)) {
             return;
         }
 
         // FIXME 手札にないと動かせない
-        if (!(this.own.GetComponent<Player>().inHand(this.gameObject))) {
-            return;
-        }
+        //if (!(this.own.GetComponent<Player>().inHand(this.gameObject))) {
+        //    return;
+        //}
 
         // ppが不足していると動かせない
-        if (!(this.own.GetComponent<Player>().enableCard(this))) {
+        if (!(this.own.GetComponent<PlayerManager>().enableCard(this))) {
             return;
         }
 
@@ -98,11 +111,12 @@ abstract public class Card : MonoBehaviour {
         }else/*場に出す時*/{
             // TODO スペル
 
-            this.own.GetComponent<Player>().useCard(this);
-            this.own.GetComponent<Player>().removeHand(this.gameObject);
-            this.own.GetComponent<Player>().addBattleZone(this.gameObject);
+            this.own.GetComponent<PlayerManager>().useCard(this);
+            this.own.GetComponent<PlayerManager>().removeHand(this.gameObject);
+            this.own.GetComponent<PlayerManager>().addBattleZone(this.gameObject);
 
             // TODO ドラッグイベント切り替え
+            addBattleZoneDrag();
         }
     }
 
@@ -111,6 +125,14 @@ abstract public class Card : MonoBehaviour {
         if (collision.tag == "ownHandZone") {
             // 手札エリアに入っている
             this.inHandZone = true;
+            return;
+        }
+
+        // TODO
+        if (collision.tag == "opponentPlayer") {
+            // 相手プレイヤーを選択している
+            this.attackOpponent = true;
+            return;
         }
 
 	}
@@ -119,8 +141,29 @@ abstract public class Card : MonoBehaviour {
         
         if (collision.tag == "ownHandZone") {
             this.inHandZone = false;
+            return;
+        }
+
+        if (collision.tag == "opponentPlayer") {
+            this.attackOpponent = false;
+            return;
         }
 
     }
 
+    protected void onEffect(){
+        // TODO
+    }
+
+    protected void offEffect(){
+        // TODO
+    }
+
+    public void changeBackSprite(){
+        mainSpriteRenderer.sprite = backSprite;
+    }
+
+    public void changeMainSprite() {
+        mainSpriteRenderer.sprite = mainSprite;
+    }
 }

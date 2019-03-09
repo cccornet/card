@@ -46,35 +46,35 @@ public class PlayerInfoManager : MonoBehaviour {
         if(own){
             // deck
             Text deckNumText = deckNumObject.GetComponent<Text>();
-            deckNumText.text = "Deck : " + player.GetComponent<Player>().getDeckNum();
+            deckNumText.text = "Deck : " + player.GetComponent<PlayerManager>().getDeckNum();
             // hand
             Text handNumText = handNumObject.GetComponent<Text>();
-            handNumText.text = "Hand : " + player.GetComponent<Player>().getHandNum();
+            handNumText.text = "Hand : " + player.GetComponent<PlayerManager>().getHandNum();
             // cemetery
             Text cemeteryNumText = cemeteryNumObject.GetComponent<Text>();
-            cemeteryNumText.text = "Cemetery : " + player.GetComponent<Player>().getCemeteryNum();
+            cemeteryNumText.text = "Cemetery : " + player.GetComponent<PlayerManager>().getCemeteryNum();
             // pp
             Text ppNumText = ppNumObject.GetComponent<Text>();
-            ppNumText.text = "PP : " + player.GetComponent<Player>().pp + " / " + player.GetComponent<Player>().maxPP;
+            ppNumText.text = "PP : " + player.GetComponent<PlayerManager>().pp + " / " + player.GetComponent<PlayerManager>().maxPP;
             // life とりあえずここで
             Text lifeNumText = lifeNumObject.GetComponent<Text>();
-            lifeNumText.text = "Life : " + player.GetComponent<Player>().life;
+            lifeNumText.text = "Life : " + player.GetComponent<PlayerManager>().life;
         }else{
             // deck
             Text opponentDeckNumText = opponentDeckNumObject.GetComponent<Text>();
-            opponentDeckNumText.text = "Deck : " + player.GetComponent<Player>().getDeckNum();
+            opponentDeckNumText.text = "Deck : " + player.GetComponent<PlayerManager>().getDeckNum();
             // hand
             Text opponentHandNumText = opponentHandNumObject.GetComponent<Text>();
-            opponentHandNumText.text = "Hand : " + player.GetComponent<Player>().getHandNum();
+            opponentHandNumText.text = "Hand : " + player.GetComponent<PlayerManager>().getHandNum();
             // cemetery
             Text opponentCemeteryNumText = opponentCemeteryNumObject.GetComponent<Text>();
-            opponentCemeteryNumText.text = "Cemetery : " + player.GetComponent<Player>().getCemeteryNum();
+            opponentCemeteryNumText.text = "Cemetery : " + player.GetComponent<PlayerManager>().getCemeteryNum();
             // pp
             Text opponentPpNumText = opponentPpNumObject.GetComponent<Text>();
-            opponentPpNumText.text = "PP : " + player.GetComponent<Player>().pp + " / " + player.GetComponent<Player>().maxPP;
+            opponentPpNumText.text = "PP : " + player.GetComponent<PlayerManager>().pp + " / " + player.GetComponent<PlayerManager>().maxPP;
             // life とりあえずここで
             Text opponentLifeNumText = opponentLifeNumObject.GetComponent<Text>();
-            opponentLifeNumText.text = "Life : " + player.GetComponent<Player>().life;
+            opponentLifeNumText.text = "Life : " + player.GetComponent<PlayerManager>().life;
         }
 
     }

@@ -20,6 +20,9 @@ public class BattleController : MonoBehaviour {
         GameObject opponentBattleZone = (GameObject)Resources.Load("Prefabs/Zone/OpponentBattleZone");
         Instantiate(opponentBattleZone, new Vector2(0, 1), Quaternion.identity);
 
+        // TODO スクリプト
+        Instantiate((GameObject)Resources.Load("Prefabs/Player/Player"), new Vector2(0, 4f), Quaternion.identity);
+
         List<GameObject> deck1 = new List<GameObject>();
         List<GameObject> deck2 = new List<GameObject>();
 
@@ -41,10 +44,13 @@ public class BattleController : MonoBehaviour {
         this.playerInfoManager.GetComponent<PlayerInfoManager>().player1 = this.player1;
         this.playerInfoManager.GetComponent<PlayerInfoManager>().player2 = this.player2;
 
-        this.player1.GetComponent<Player>().initBattle();
-        this.player2.GetComponent<Player>().initBattle();
+        this.player1.GetComponent<PlayerManager>().initBattle();
+        this.player2.GetComponent<PlayerManager>().initBattle();
 
-        this.player1.GetComponent<Player>().startMyTurn();
+        // FIXME Start()のタイミングに注意
+        //this.player2.GetComponent<PlayerManager>().changeHandBackSprite();
+
+        this.player1.GetComponent<PlayerManager>().startMyTurn();
 
 	}
 	
@@ -55,42 +61,46 @@ public class BattleController : MonoBehaviour {
     private GameObject makePlayer(string playerName, List<GameObject> deck, bool firstPlay, GameObject ownHandZone, GameObject ownBattleZone){
         // FIXME
         GameObject player = new GameObject(playerName);
-        player.AddComponent<Player>();
+        player.AddComponent<PlayerManager>();
 
-        player.GetComponent<Player>().deck = deck;
-        player.GetComponent<Player>().playFirst = firstPlay;
-        player.GetComponent<Player>().ownHandZone = ownHandZone;
-        player.GetComponent<Player>().ownBattleZone = ownBattleZone;
+        player.GetComponent<PlayerManager>().deck = deck;
+        player.GetComponent<PlayerManager>().playFirst = firstPlay;
+        player.GetComponent<PlayerManager>().ownHandZone = ownHandZone;
+        player.GetComponent<PlayerManager>().ownBattleZone = ownBattleZone;
         return player;
     }
 
 
     // 直接Playerの関数呼ぶよりこっちの方が良さげ もう少しうまくアクセスしたい
     public bool myTurn(){
-        return this.player1.GetComponent<Player>().myTurn;
+        return this.player1.GetComponent<PlayerManager>().myTurn;
     }
 
     public bool enableCard(Card targetCard) {
-        return this.player1.GetComponent<Player>().enableCard(targetCard);
+        return this.player1.GetComponent<PlayerManager>().enableCard(targetCard);
     }
 
     public void useCard(Card targetCard) {
-        this.player1.GetComponent<Player>().useCard(targetCard);
+        this.player1.GetComponent<PlayerManager>().useCard(targetCard);
     }
 
     public void removeHand(GameObject removeCard){
-        this.player1.GetComponent<Player>().removeHand(removeCard);
+        this.player1.GetComponent<PlayerManager>().removeHand(removeCard);
     }
 
     public void addBattleZone(GameObject addCard){
-        this.player1.GetComponent<Player>().addBattleZone(addCard);
+        this.player1.GetComponent<PlayerManager>().addBattleZone(addCard);
     }
 
     public void endTurn(){
         Debug.Log("Turn end");
-        this.player1.GetComponent<Player>().endMyTurn();
+        this.player1.GetComponent<PlayerManager>().endMyTurn();
 
         // TODO player入れ替え
-        this.player1.GetComponent<Player>().startMyTurn();
+        this.player1.GetComponent<PlayerManager>().startMyTurn();
+    }
+
+    public void attackOpponentPlayer(int attack){
+        this.player2.GetComponent<PlayerManager>().life -= attack;
     }
 }

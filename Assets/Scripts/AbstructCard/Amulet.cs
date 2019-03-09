@@ -6,4 +6,6 @@ abstract public class Amulet : Card {
     protected abstract void fanfare();
     protected abstract void lastWord();
     protected abstract void effect();
+
+    protected override void addBattleZoneDrag() {}
 }
