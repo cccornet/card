@@ -22,9 +22,12 @@ abstract public class Card : MonoBehaviour {
     [SerializeField]
     private Sprite backSprite;
 
+    protected GameObject battleController;
+
     protected virtual void Start(){
         this.mainSpriteRenderer = this.gameObject.GetComponent<SpriteRenderer>();
 
+        this.battleController = GameObject.FindGameObjectsWithTag("BattleController")[0];
         // FIXME
         this.own = GameObject.Find("Player1");
 
@@ -121,7 +124,7 @@ abstract public class Card : MonoBehaviour {
     }
 
 	private void OnTriggerEnter2D(Collider2D collision) {
-        
+
         if (collision.tag == "ownHandZone") {
             // 手札エリアに入っている
             this.inHandZone = true;
@@ -129,7 +132,7 @@ abstract public class Card : MonoBehaviour {
         }
 
         // TODO
-        if (collision.tag == "opponentPlayer") {
+        if (collision.tag == "Player") {
             // 相手プレイヤーを選択している
             this.attackOpponent = true;
             return;
@@ -144,7 +147,7 @@ abstract public class Card : MonoBehaviour {
             return;
         }
 
-        if (collision.tag == "opponentPlayer") {
+        if (collision.tag == "Player") {
             this.attackOpponent = false;
             return;
         }

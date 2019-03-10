@@ -3,7 +3,8 @@ using UnityEngine.EventSystems;
 
 abstract public class Follower : Card {
     protected int attack;
-    protected int health;
+    // protected int health;
+    public int health { get; set; }
 
     public bool canAttack { get; protected set; }
 
@@ -97,16 +98,16 @@ abstract public class Follower : Card {
             return;
         }
 
-        if(this.attackOpponent/*攻撃対象が選択された時*/){
-            // GetComponent<BattleController>().attackOpponentPlayer(this.attack);
-            // ゲームオーバー判定
+        if(this.attackOpponent/*相手プレイヤーが選択された時*/){
+            this.battleController.GetComponent<BattleController>().attackOpponentPlayer(this.attack);
             this.canAttack = false;
-
-            // TODO フォロワーの場合
-            // 破壊処理
+        }else if (false/* 相手フォロワーが選択された時 */){
+            // 1.互いにダメージを与えあう
+            // 2.破壊処理
         }else/* 選択されなかった時 */{
-            this.transform.position = this.beginPos;
+            
         }
 
+        this.transform.position = this.beginPos;
     }
 }

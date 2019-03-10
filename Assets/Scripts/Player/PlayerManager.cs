@@ -179,6 +179,10 @@ public class PlayerManager : MonoBehaviour {
         displayZone("battleZone");
     }
 
+    public void addCemetery(GameObject addCard){
+        this.cemetery.Add(addCard);
+    }
+
     //public bool inBattleZone(GameObject targetCard) {
     //    if (this.battleZone.IndexOf(targetCard) > -1) {
     //        return true;
@@ -242,6 +246,17 @@ public class PlayerManager : MonoBehaviour {
     public void changeHandBackSprite(){
         foreach (GameObject card in this.hand) {
             card.GetComponent<Card>().changeBackSprite();
+        }
+    }
+
+    public void checkFollowersHealth() {
+        foreach (GameObject cardObj in this.battleZone) {
+            Card card = cardObj.GetComponent<Card>();
+            if (card is Follower && ((Follower)card).health <= 0) {
+                removeBattleZone(cardObj);
+                addCemetery(cardObj);
+                Destroy(cardObj);// 要検証 Instantiate()の逆のみ行う
+            }
         }
     }
 

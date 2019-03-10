@@ -102,5 +102,14 @@ public class BattleController : MonoBehaviour {
 
     public void attackOpponentPlayer(int attack){
         this.player2.GetComponent<PlayerManager>().life -= attack;
+        checkGameOver(player2);
     }
+
+    public void checkGameOver(GameObject player){
+        if(player.GetComponent<PlayerManager>().life < 1){
+            //TODO リザルト画面を表示する
+            Debug.Log("Win");
+        }
+    }
+
 }
