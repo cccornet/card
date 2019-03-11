@@ -20,6 +20,8 @@ public class PlayerManager : MonoBehaviour {
 
     public bool myTurn { get; private set; }
 
+    public BattleController battleController{ get; set; }
+
     public PlayerManager(){
         this.maxPP = 0;
         this.pp = this.maxPP;
@@ -103,7 +105,6 @@ public class PlayerManager : MonoBehaviour {
     }
 
     public bool enableCard(Card targetCard){
-        
         if (targetCard.cost > this.pp) {
             return false;
         }else if(targetCard is Follower && this.battleZone.Count >= 5) {
@@ -149,7 +150,7 @@ public class PlayerManager : MonoBehaviour {
         // 子要素にする必要ない？
         // card.transform.parent = this.ownHandZone.transform;
         // TODO デッキ以外の挙動
-        GameObject card = Instantiate(addCard, new Vector2(0, this.ownHandZone.transform.position.y), Quaternion.identity);
+        GameObject card = battleController.instantiateCard(addCard, this);
         this.hand.Add(card);
         displayZone("hand");
     }

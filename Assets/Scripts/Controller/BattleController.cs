@@ -62,34 +62,40 @@ public class BattleController : MonoBehaviour {
         // FIXME
         GameObject player = new GameObject(playerName);
         player.AddComponent<PlayerManager>();
+        PlayerManager playerManager = player.GetComponent<PlayerManager>();
 
-        player.GetComponent<PlayerManager>().deck = deck;
-        player.GetComponent<PlayerManager>().playFirst = firstPlay;
-        player.GetComponent<PlayerManager>().ownHandZone = ownHandZone;
-        player.GetComponent<PlayerManager>().ownBattleZone = ownBattleZone;
+        playerManager.deck = deck;
+        playerManager.playFirst = firstPlay;
+        playerManager.ownHandZone = ownHandZone;
+        playerManager.ownBattleZone = ownBattleZone;
+        playerManager.battleController = this;
         return player;
     }
 
 
     // 直接Playerの関数呼ぶよりこっちの方が良さげ もう少しうまくアクセスしたい
-    public bool myTurn(){
-        return this.player1.GetComponent<PlayerManager>().myTurn;
+    public bool myTurn(GameObject player){
+        return player.GetComponent<PlayerManager>().myTurn;
     }
 
-    public bool enableCard(Card targetCard) {
-        return this.player1.GetComponent<PlayerManager>().enableCard(targetCard);
+    public bool enableCard(GameObject player, Card targetCard) {
+        return player.GetComponent<PlayerManager>().enableCard(targetCard);
     }
 
-    public void useCard(Card targetCard) {
-        this.player1.GetComponent<PlayerManager>().useCard(targetCard);
+    public void useCard(GameObject player, Card targetCard) {
+        player.GetComponent<PlayerManager>().useCard(targetCard);
     }
 
-    public void removeHand(GameObject removeCard){
-        this.player1.GetComponent<PlayerManager>().removeHand(removeCard);
+    public void removeHand(GameObject player, GameObject removeCard){
+        player.GetComponent<PlayerManager>().removeHand(removeCard);
     }
 
-    public void addBattleZone(GameObject addCard){
-        this.player1.GetComponent<PlayerManager>().addBattleZone(addCard);
+    public void addBattleZone(GameObject player, GameObject addCard){
+        player.GetComponent<PlayerManager>().addBattleZone(addCard);
+    }
+
+    public void displayZone(GameObject player, string zone){
+        player.GetComponent<PlayerManager>().displayZone(zone);
     }
 
     public void endTurn(){
@@ -112,4 +118,12 @@ public class BattleController : MonoBehaviour {
         }
     }
 
+    public GameObject instantiateCard(GameObject card, PlayerManager player) {
+        GameObject newCard = Instantiate(card, new Vector2(0, player.ownHandZone.transform.position.y), Quaternion.identity);
+        newCard.GetComponent<Card>().battleController = this;
+        newCard.GetComponent <Card>().owner = player.gameObject;
+
+        newCard.GetComponent<Card>().addEventTrigger();
+        return newCard;
+    }
 }

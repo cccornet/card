@@ -3,27 +3,12 @@
 public class Goblin : Follower {
 
     // DBから持ってきた方がいい？
-    private string CARDNAME = "Goblin";
-    private int COST = 1;
-    private int ATTACK = 1;
-    private int HEALTH = 2;
+    protected override string CARDNAME { get{ return "Goblin"; } }
+    protected override int COST { get { return 1; } }
+    protected override int ATTACK { get { return 1; } }
+    protected override int HEALTH { get { return 2; } }
 
-    public Goblin(){
-        
-    }
-
-    protected override void Start () {
-        base.Start();
-
-        this.cardName = this.CARDNAME;
-        this.cost = this.COST;
-        this.attack = this.ATTACK;
-        this.health = this.HEALTH;
-
-        this.canAttack = false;
-	}
-	
-    protected override void fanfare() {
+	protected override void fanfare() {
         // 能力なし
     }
 

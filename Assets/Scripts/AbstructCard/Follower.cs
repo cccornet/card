@@ -3,10 +3,14 @@ using UnityEngine.EventSystems;
 
 abstract public class Follower : Card {
     protected int attack;
-    // protected int health;
     public int health { get; set; }
 
     public bool canAttack { get; protected set; }
+
+    protected abstract string CARDNAME{ get; }
+    protected abstract int COST { get; }
+    protected abstract int ATTACK { get; }
+    protected abstract int HEALTH { get; }
 
     protected abstract void fanfare();
     protected abstract void lastWord();
@@ -20,10 +24,14 @@ abstract public class Follower : Card {
 	//    changeCanAttackEffect();
 	//}
 
-    // FIXME 保留
-	//protected override void Start() {
-	//	base.Start();
-	//}
+    protected override void setParameters() {
+        this.cardName = this.CARDNAME;
+        this.cost = this.COST;
+        this.attack = this.ATTACK;
+        this.health = this.HEALTH;
+
+        this.canAttack = false;
+    }
 
 	public void enableAttack(){
         this.canAttack = true;
@@ -65,14 +73,13 @@ abstract public class Follower : Card {
 
     // FIXME In or On
     public void OnBeginDragInBattleZone() {
-        // FIXME
-        base.beginPos = this.transform.position;
+        
     }
 
     // FIXME In or On
     public void OnDragInBattleZone() {
         // 自分のターンでないと動かせない
-        if (!(this.own.GetComponent<PlayerManager>().myTurn)) {
+        if (!(battleController.myTurn(this.owner))) {
             return;
         }
 
@@ -89,7 +96,7 @@ abstract public class Follower : Card {
     // FIXME In or On
     public void OnEndDragInBattleZone() {
         // 自分のターンでないと動かせない
-        if (!(this.own.GetComponent<PlayerManager>().myTurn)) {
+        if (!(battleController.myTurn(this.owner))) {
             return;
         }
 
@@ -108,6 +115,7 @@ abstract public class Follower : Card {
             
         }
 
-        this.transform.position = this.beginPos;
+        // FIXME
+        battleController.GetComponent<BattleController>().displayZone(this.owner, "battleZone");
     }
 }

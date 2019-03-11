@@ -7,11 +7,8 @@ abstract public class Card : MonoBehaviour {
     protected Sprite sprite;
     protected string text;
 
-    protected Vector3 beginPos;
-
-    protected GameObject own;
-    // 静的に決める方法考え中
-    // protected GameObject battleController;
+    public GameObject owner{ get; set; }
+    public BattleController battleController{ get; set; }
 
     private bool inHandZone;
     //private bool inBattleZone;
@@ -22,28 +19,25 @@ abstract public class Card : MonoBehaviour {
     [SerializeField]
     private Sprite backSprite;
 
-    protected GameObject battleController;
-
     protected virtual void Start(){
         this.mainSpriteRenderer = this.gameObject.GetComponent<SpriteRenderer>();
+        this.mainSprite = mainSpriteRenderer.sprite;
 
-        this.battleController = GameObject.FindGameObjectsWithTag("BattleController")[0];
-        // FIXME
-        this.own = GameObject.Find("Player1");
+        setParameters();
 
-        addEventTrigger();
+        //addEventTrigger();
 
     }
 
-    protected void addEventTrigger(){
+    protected abstract void setParameters();
+
+    public void addEventTrigger(){
         this.gameObject.AddComponent<EventTrigger>();
 
-        // FIXME 中身を動的に変更することで処理を分岐できる
         this.addHandDrag();
     }
 
     protected void addHandDrag(){
-        
         EventTrigger eventTrigger = this.gameObject.GetComponent<EventTrigger>();
         eventTrigger.triggers.Clear();
 
@@ -67,22 +61,17 @@ abstract public class Card : MonoBehaviour {
     protected abstract void addBattleZoneDrag();
 
 	public void OnBeginDragInHand() {
-        this.beginPos = this.transform.position;
+        
     }
 
     public void OnDragInHand() {
 
         // 自分のターンでないと動かせない
-        if (!(this.own.GetComponent<PlayerManager>().myTurn)) {
+        if (!(battleController.myTurn(this.owner))) {
             return;
         }
 
-        // FIXME 手札にないと動かせない
-        //if (!(this.own.GetComponent<Player>().inHand(this.gameObject))) {
-        //    return;
-        //}
-
-        if (this.own.GetComponent<PlayerManager>().enableCard(this)) {
+        if (battleController.enableCard(this.owner, this)) {
             Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             worldMousePos.z = 0;/* 2D座標に合わせる */
             this.transform.position = worldMousePos;
@@ -95,30 +84,25 @@ abstract public class Card : MonoBehaviour {
     public void OnEndDragInHand(){
 
         // 自分のターンでないと動かせない
-        if (!(this.own.GetComponent<PlayerManager>().myTurn)) {
+        if (!(battleController.myTurn(this.owner))) {
             return;
         }
 
-        // FIXME 手札にないと動かせない
-        //if (!(this.own.GetComponent<Player>().inHand(this.gameObject))) {
-        //    return;
-        //}
-
         // ppが不足していると動かせない
-        if (!(this.own.GetComponent<PlayerManager>().enableCard(this))) {
+        // OnDragInHandと条件が逆なのでどうするか
+        if (!(battleController.enableCard(this.owner, this))) {
             return;
         }
 
         if(this.inHandZone/*手札に戻した時*/){
-            this.transform.position = this.beginPos;
+            battleController.displayZone(this.owner, "hand");
         }else/*場に出す時*/{
-            // TODO スペル
+            // TODO スペル、アミュレット
 
-            this.own.GetComponent<PlayerManager>().useCard(this);
-            this.own.GetComponent<PlayerManager>().removeHand(this.gameObject);
-            this.own.GetComponent<PlayerManager>().addBattleZone(this.gameObject);
+            battleController.useCard(this.owner, this);
+            battleController.removeHand(this.owner, this.gameObject);
+            battleController.addBattleZone(this.owner, this.gameObject);
 
-            // TODO ドラッグイベント切り替え
             addBattleZoneDrag();
         }
     }
