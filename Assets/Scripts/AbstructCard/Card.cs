@@ -14,18 +14,15 @@ abstract public class Card : MonoBehaviour {
     //private bool inBattleZone;
     protected bool attackOpponent;
 
-    private SpriteRenderer mainSpriteRenderer;
+    public SpriteRenderer mainSpriteRenderer;
     private Sprite mainSprite;
-    [SerializeField]
-    private Sprite backSprite;
+    public Sprite backSprite{ get; set; }
 
-    protected virtual void Start(){
+    protected virtual void Awake(){
         this.mainSpriteRenderer = this.gameObject.GetComponent<SpriteRenderer>();
         this.mainSprite = mainSpriteRenderer.sprite;
 
         setParameters();
-
-        //addEventTrigger();
 
     }
 
@@ -147,10 +144,10 @@ abstract public class Card : MonoBehaviour {
     }
 
     public void changeBackSprite(){
-        mainSpriteRenderer.sprite = backSprite;
+        this.mainSpriteRenderer.sprite = backSprite;/* インスタンス化してないとmainSpriteRendererがnullなので注意 */
     }
 
     public void changeMainSprite() {
-        mainSpriteRenderer.sprite = mainSprite;
+        this.mainSpriteRenderer.sprite = mainSprite;/* インスタンス化してないとmainSpriteRendererがnullなので注意 */
     }
 }

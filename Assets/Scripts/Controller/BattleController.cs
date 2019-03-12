@@ -17,6 +17,9 @@ public class BattleController : MonoBehaviour {
     private GameObject resultUIPrefab;
     private GameObject resultUIInstance;
 
+    // FIXME
+    [SerializeField]
+    private Sprite backSprite;
 
 	void Start () {
         // エリア生成
@@ -46,8 +49,8 @@ public class BattleController : MonoBehaviour {
         // 先攻後攻決め
         // bool firstPlay = Random.Range(0, 2) == 0 ? true : false;
 
-        this.player1 = makePlayer("Player1", deck1, true, ownHandZone, ownBattleZone);
-        this.player2 = makePlayer("Player2", deck2, false, opponentHandZone, opponentBattleZone);
+        this.player1 = makePlayer("Player1", deck1, this.backSprite, true, ownHandZone, ownBattleZone);
+        this.player2 = makePlayer("Player2", deck2, this.backSprite, false, opponentHandZone, opponentBattleZone);
         // コンポーネントも別の変数に入れとく？
 
         this.playerInfoManager.GetComponent<PlayerInfoManager>().player1 = this.player1;
@@ -55,9 +58,6 @@ public class BattleController : MonoBehaviour {
 
         this.player1.GetComponent<PlayerManager>().initBattle();
         this.player2.GetComponent<PlayerManager>().initBattle();
-
-        // FIXME Start()のタイミングに注意
-        //this.player2.GetComponent<PlayerManager>().changeHandBackSprite();
 
         this.player1.GetComponent<PlayerManager>().startMyTurn();
 
@@ -67,13 +67,14 @@ public class BattleController : MonoBehaviour {
         
 	}
 
-    private GameObject makePlayer(string playerName, List<GameObject> deck, bool firstPlay, GameObject ownHandZone, GameObject ownBattleZone){
+    private GameObject makePlayer(string playerName, List<GameObject> deck, Sprite cardBack,bool firstPlay, GameObject ownHandZone, GameObject ownBattleZone){
         // FIXME
         GameObject player = new GameObject(playerName);
         player.AddComponent<PlayerManager>();
         PlayerManager playerManager = player.GetComponent<PlayerManager>();
 
         playerManager.deck = deck;
+        playerManager.backSprite = cardBack;
         playerManager.playFirst = firstPlay;
         playerManager.ownHandZone = ownHandZone;
         playerManager.ownBattleZone = ownBattleZone;
@@ -157,8 +158,16 @@ public class BattleController : MonoBehaviour {
         GameObject newCard = Instantiate(card, new Vector2(0, player.ownHandZone.transform.position.y), Quaternion.identity);
         newCard.GetComponent<Card>().battleController = this;
         newCard.GetComponent <Card>().owner = player.gameObject;
-
-        newCard.GetComponent<Card>().addEventTrigger();
+        newCard.GetComponent<Card>().backSprite = player.backSprite;
+        newCard.GetComponent<Card>().addEventTrigger(); /* 先にownerを登録する必要がある */
         return newCard;
+    }
+
+    public bool checkHandBack(PlayerManager player){
+        if(player.gameObject == this.player1){
+            return false;
+        }else{
+            return true;
+        }
     }
 }

@@ -22,6 +22,8 @@ public class PlayerManager : MonoBehaviour {
 
     public BattleController battleController{ get; set; }
 
+    public Sprite backSprite { get; set; }
+
     public PlayerManager(){
         this.maxPP = 0;
         this.pp = this.maxPP;
@@ -33,10 +35,6 @@ public class PlayerManager : MonoBehaviour {
         this.cemetery = new List<GameObject>();
         this.myTurn = false;
     }
-
-	private void Start () {
-        
-	}
 
     public void initBattle(){
         drowCard(3);
@@ -151,6 +149,11 @@ public class PlayerManager : MonoBehaviour {
         // card.transform.parent = this.ownHandZone.transform;
         // TODO デッキ以外の挙動
         GameObject card = battleController.instantiateCard(addCard, this);
+        // FIXME Start()の呼び出される時の認識が間違っている
+        if(battleController.checkHandBack(this)) {
+            card.GetComponent<Card>().changeBackSprite();
+        }
+
         this.hand.Add(card);
         displayZone("hand");
     }
@@ -170,7 +173,7 @@ public class PlayerManager : MonoBehaviour {
 
     public void addBattleZone(GameObject addCard) {
         // TODO アニメーション再生
-
+        // TODO addCard.GetComponent<Card>().changeMainSprite(); // チェックするかすべて変更するかどちらが良い？
         this.battleZone.Add(addCard);
         displayZone("battleZone");
     }
@@ -244,11 +247,11 @@ public class PlayerManager : MonoBehaviour {
         }
     }
 
-    public void changeHandBackSprite(){
-        foreach (GameObject card in this.hand) {
-            card.GetComponent<Card>().changeBackSprite();
-        }
-    }
+    //public void changeHandBackSprite(){
+    //    foreach (GameObject card in this.hand) {
+    //        card.GetComponent<Card>().changeBackSprite();
+    //    }
+    //}
 
     public void checkFollowersHealth() {
         foreach (GameObject cardObj in this.battleZone) {
