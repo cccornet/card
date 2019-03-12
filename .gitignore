@@ -35,8 +35,7 @@ Thumbs.db
 # ============ #
 # for others   #
 # ============ #
-
+.vs/ #Visual Studio
 *.log #log files, for some plugins
 *.pyc #python bytecode cache, for some plugins.
 sysinfo.txt #Unity3D Generated File On Crash Reports
-.vs/ #Visual Studio
