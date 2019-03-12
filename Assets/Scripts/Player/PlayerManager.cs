@@ -70,7 +70,7 @@ public class PlayerManager : MonoBehaviour {
         for (int i = 0; i < n; i++){
             
             if(this.deck.Count == 0){
-                // TODO 敗北
+                battleController.displayResult(this.gameObject);
                 return;
             }
 

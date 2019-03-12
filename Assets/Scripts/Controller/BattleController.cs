@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BattleController : MonoBehaviour {
 
@@ -8,6 +9,14 @@ public class BattleController : MonoBehaviour {
 
     private GameObject player1;
     private GameObject player2;
+
+    [SerializeField]
+    private GameObject canvas;
+
+    [SerializeField]
+    private GameObject resultUIPrefab;
+    private GameObject resultUIInstance;
+
 
 	void Start () {
         // エリア生成
@@ -112,10 +121,36 @@ public class BattleController : MonoBehaviour {
     }
 
     public void checkGameOver(GameObject player){
-        if(player.GetComponent<PlayerManager>().life < 1){
-            //TODO リザルト画面を表示する
-            Debug.Log("Win");
+
+        // デッキ枚数による勝敗は引くタイミングなので、ここではタイミングがずれる
+        // this.player1.GetComponent<PlayerManager>().getDeckNum() < 0
+        if(this.player1.GetComponent<PlayerManager>().life < 1){
+            displayResult(player1);
+        }else if(this.player2.GetComponent<PlayerManager>().life < 1){
+            displayResult(player2);
         }
+
+    }
+
+    public void displayResult(GameObject player){
+        string message = "You ";
+        if(player == player1){
+            message += "Lose";
+        }else{
+            message += "Win!";
+        }
+        this.resultUIInstance = Instantiate(resultUIPrefab) as GameObject;
+        this.resultUIInstance.transform.SetParent(this.canvas.transform, false);
+        Text UIText = this.resultUIInstance.transform.Find("Text").gameObject.GetComponent<Text>();
+        UIText.text = message;
+
+        //Time.timeScale = 0f; // Update()は止まらない
+        // メモ
+        //void Update() {
+        //    if (Mathf.Approximately(Time.timeScale, 0f)) {
+        //        return;
+        //    }
+        //}
     }
 
     public GameObject instantiateCard(GameObject card, PlayerManager player) {
