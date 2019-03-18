@@ -149,9 +149,9 @@ public class PlayerManager : MonoBehaviour {
         // card.transform.parent = this.ownHandZone.transform;
         // TODO デッキ以外の挙動
         GameObject card = battleController.instantiateCard(addCard, this);
-        // FIXME Start()の呼び出される時の認識が間違っている
         if(battleController.checkHandBack(this)) {
             card.GetComponent<Card>().changeBackSprite();
+            card.GetComponent<Card>().setActiveState(false);
         }
 
         this.hand.Add(card);
@@ -175,6 +175,7 @@ public class PlayerManager : MonoBehaviour {
         // TODO アニメーション再生
         // TODO addCard.GetComponent<Card>().changeMainSprite(); // チェックするかすべて変更するかどちらが良い？
         this.battleZone.Add(addCard);
+        addCard.GetComponent<Card>().lowStatePosiotion();
         displayZone("battleZone");
     }
 

@@ -543,6 +543,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerInfoManager: {fileID: 1203986752}
+  canvas: {fileID: 698836308}
+  resultUIPrefab: {fileID: 1342586242567382, guid: 774a4dba5fe6545b48f12b108211eab8,
+    type: 2}
+  backSprite: {fileID: 21300000, guid: 1ece5592d997549c8aabe1f348d4aac9, type: 3}
 --- !u!4 &1017450240
 Transform:
   m_ObjectHideFlags: 0

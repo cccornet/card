@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 abstract public class Follower : Card {
     protected int attack;
@@ -16,6 +17,11 @@ abstract public class Follower : Card {
     protected abstract void lastWord();
     protected abstract void effect();
 
+    protected GameObject attackObj;
+    protected GameObject healthObj;
+    protected Text attackText;
+    protected Text healthText;
+
 	//private void addHandDrag(){
 	//    base.addHandDrag();
 	//}
@@ -29,6 +35,19 @@ abstract public class Follower : Card {
         this.cost = this.COST;
         this.attack = this.ATTACK;
         this.health = this.HEALTH;
+
+        this.costObj = this.transform.Find("cost").gameObject;
+        this.attackObj = this.transform.Find("attack").gameObject;
+        this.healthObj = this.transform.Find("health").gameObject;
+
+        this.costText = this.costObj.transform.Find("Canvas").gameObject.GetComponent<Text>();
+        this.attackText = this.attackObj.transform.Find("Canvas").gameObject.GetComponent<Text>();
+        this.healthText = this.healthObj.transform.Find("Canvas").gameObject.GetComponent<Text>();
+
+        // int -> string
+        // this.costText.text = this.cost;
+        // this.attackText.text = this.attack;
+        // this.healthText.text = this.health;
 
         this.canAttack = false;
     }
@@ -117,5 +136,29 @@ abstract public class Follower : Card {
 
         // FIXME
         battleController.GetComponent<BattleController>().displayZone(this.owner, "battleZone");
+    }
+
+    public override void lowStatePosiotion(){
+        base.lowStatePosiotion();
+
+        this.attackObj.SetActive(true);
+        this.healthObj.SetActive(true);
+
+        Vector3 attackLocalPos = this.attackObj.transform.localPosition;/* positionはアクセス修飾詞の設定上、直接変更できない */
+        attackLocalPos.y = -4.0f;
+        this.attackObj.transform.localPosition = attackLocalPos;
+
+        Vector3 healthLocalPos = this.healthObj.transform.localPosition;/* positionはアクセス修飾詞の設定上、直接変更できない */
+        healthLocalPos.x = 3.0f;
+        healthLocalPos.y = -4.0f;
+        this.healthObj.transform.localPosition = healthLocalPos;
+
+    }
+
+    public override void setActiveState(bool states) {
+        base.setActiveState(states);
+
+        this.attackObj.SetActive(states);
+        this.healthObj.SetActive(states);
     }
 }

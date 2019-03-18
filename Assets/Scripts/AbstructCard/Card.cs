@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 abstract public class Card : MonoBehaviour {
     public string cardName { get; protected set; }
@@ -17,6 +18,9 @@ abstract public class Card : MonoBehaviour {
     public SpriteRenderer mainSpriteRenderer;
     private Sprite mainSprite;
     public Sprite backSprite{ get; set; }
+
+    protected GameObject costObj;
+    protected Text costText;
 
     protected virtual void Awake(){
         this.mainSpriteRenderer = this.gameObject.GetComponent<SpriteRenderer>();
@@ -145,9 +149,18 @@ abstract public class Card : MonoBehaviour {
 
     public void changeBackSprite(){
         this.mainSpriteRenderer.sprite = backSprite;/* インスタンス化してないとmainSpriteRendererがnullなので注意 */
+        // TODO コスト等を非表示にする
     }
 
     public void changeMainSprite() {
         this.mainSpriteRenderer.sprite = mainSprite;/* インスタンス化してないとmainSpriteRendererがnullなので注意 */
+    }
+
+    public virtual void lowStatePosiotion() {
+        this.costObj.SetActive(false);
+    }
+
+    public virtual void setActiveState(bool states){
+        this.costObj.SetActive(states);
     }
 }
