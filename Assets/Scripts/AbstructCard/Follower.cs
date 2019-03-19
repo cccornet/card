@@ -40,14 +40,13 @@ abstract public class Follower : Card {
         this.attackObj = this.transform.Find("attack").gameObject;
         this.healthObj = this.transform.Find("health").gameObject;
 
-        this.costText = this.costObj.transform.Find("Canvas").gameObject.GetComponent<Text>();
-        this.attackText = this.attackObj.transform.Find("Canvas").gameObject.GetComponent<Text>();
-        this.healthText = this.healthObj.transform.Find("Canvas").gameObject.GetComponent<Text>();
+        this.costText = this.costObj.transform.Find("Canvas").transform.Find("Text").gameObject.GetComponent<Text>();
+        this.attackText = this.attackObj.transform.Find("Canvas").transform.Find("Text").gameObject.GetComponent<Text>();
+        this.healthText = this.healthObj.transform.Find("Canvas").transform.Find("Text").gameObject.GetComponent<Text>();
 
-        // int -> string
-        // this.costText.text = this.cost;
-        // this.attackText.text = this.attack;
-        // this.healthText.text = this.health;
+        this.costText.text = this.cost.ToString();
+        this.attackText.text = this.attack.ToString();
+        this.healthText.text = this.health.ToString();
 
         this.canAttack = false;
     }
@@ -70,7 +69,7 @@ abstract public class Follower : Card {
         }
     }
 
-    protected override void addBattleZoneDrag() {
+    public override void addBattleZoneDrag() {
         EventTrigger eventTrigger = this.gameObject.GetComponent<EventTrigger>();
         eventTrigger.triggers.Clear();
 
@@ -130,6 +129,9 @@ abstract public class Follower : Card {
         }else if (false/* 相手フォロワーが選択された時 */){
             // 1.互いにダメージを与えあう
             // 2.破壊処理
+
+            // 複数選択不可にする方法
+            // とりあえず複数だったら弾くか
         }else/* 選択されなかった時 */{
             
         }

@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 61005892218205254}
   m_Layer: 10
   m_Name: OpponentBattleZone
-  m_TagString: ownBattleZone
+  m_TagString: OwnBattleZone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

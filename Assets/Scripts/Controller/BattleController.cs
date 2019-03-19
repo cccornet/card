@@ -10,6 +10,8 @@ public class BattleController : MonoBehaviour {
     private GameObject player1;
     private GameObject player2;
 
+    private GameObject nowPlayer;
+
     [SerializeField]
     private GameObject canvas;
 
@@ -49,9 +51,11 @@ public class BattleController : MonoBehaviour {
         // 先攻後攻決め
         // bool firstPlay = Random.Range(0, 2) == 0 ? true : false;
 
-        this.player1 = makePlayer("Player1", deck1, this.backSprite, true, ownHandZone, ownBattleZone);
-        this.player2 = makePlayer("Player2", deck2, this.backSprite, false, opponentHandZone, opponentBattleZone);
+        this.player1 = makePlayer("Player1", deck1, this.backSprite, true, ownHandZone, ownBattleZone, false);
+        this.player2 = makePlayer("Player2", deck2, this.backSprite, false, opponentHandZone, opponentBattleZone, true);
         // コンポーネントも別の変数に入れとく？
+
+        this.nowPlayer = player1;
 
         this.playerInfoManager.GetComponent<PlayerInfoManager>().player1 = this.player1;
         this.playerInfoManager.GetComponent<PlayerInfoManager>().player2 = this.player2;
@@ -67,7 +71,7 @@ public class BattleController : MonoBehaviour {
         
 	}
 
-    private GameObject makePlayer(string playerName, List<GameObject> deck, Sprite cardBack,bool firstPlay, GameObject ownHandZone, GameObject ownBattleZone){
+    private GameObject makePlayer(string playerName, List<GameObject> deck, Sprite cardBack,bool firstPlay, GameObject ownHandZone, GameObject ownBattleZone, bool auto){
         // FIXME
         GameObject player = new GameObject(playerName);
         player.AddComponent<PlayerManager>();
@@ -79,6 +83,11 @@ public class BattleController : MonoBehaviour {
         playerManager.ownHandZone = ownHandZone;
         playerManager.ownBattleZone = ownBattleZone;
         playerManager.battleController = this;
+
+        if(auto){
+            playerManager.auto = auto;
+        }
+
         return player;
     }
 
@@ -94,6 +103,14 @@ public class BattleController : MonoBehaviour {
 
     public void useCard(GameObject player, Card targetCard) {
         player.GetComponent<PlayerManager>().useCard(targetCard);
+        player.GetComponent<PlayerManager>().removeHand(targetCard.gameObject);
+
+        if(targetCard is Follower){
+            player.GetComponent<PlayerManager>().addBattleZone(targetCard.gameObject);
+            targetCard.addBattleZoneDrag();
+        }else{
+            // TODO スペル、アミュレット
+        }
     }
 
     public void removeHand(GameObject player, GameObject removeCard){
@@ -110,10 +127,16 @@ public class BattleController : MonoBehaviour {
 
     public void endTurn(){
         Debug.Log("Turn end");
-        this.player1.GetComponent<PlayerManager>().endMyTurn();
+        nowPlayer.GetComponent<PlayerManager>().endMyTurn();
 
-        // TODO player入れ替え
-        this.player1.GetComponent<PlayerManager>().startMyTurn();
+        if(nowPlayer == this.player2){
+            nowPlayer = this.player1;
+            this.player1.GetComponent<PlayerManager>().startMyTurn();
+        }else{
+            nowPlayer = this.player2;
+            this.player2.GetComponent<PlayerManager>().startMyTurn();
+        }
+
     }
 
     public void attackOpponentPlayer(int attack){

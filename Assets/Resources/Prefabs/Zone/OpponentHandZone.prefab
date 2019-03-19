@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 61802550304351812}
   m_Layer: 9
   m_Name: OpponentHandZone
-  m_TagString: ownHandZone
+  m_TagString: OwnHandZone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

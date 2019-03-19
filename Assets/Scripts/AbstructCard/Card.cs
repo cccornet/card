@@ -15,7 +15,7 @@ abstract public class Card : MonoBehaviour {
     //private bool inBattleZone;
     protected bool attackOpponent;
 
-    public SpriteRenderer mainSpriteRenderer;
+    private SpriteRenderer mainSpriteRenderer;
     private Sprite mainSprite;
     public Sprite backSprite{ get; set; }
 
@@ -59,7 +59,7 @@ abstract public class Card : MonoBehaviour {
 
     }
 
-    protected abstract void addBattleZoneDrag();
+    public abstract void addBattleZoneDrag();
 
 	public void OnBeginDragInHand() {
         
@@ -98,19 +98,13 @@ abstract public class Card : MonoBehaviour {
         if(this.inHandZone/*手札に戻した時*/){
             battleController.displayZone(this.owner, "hand");
         }else/*場に出す時*/{
-            // TODO スペル、アミュレット
-
             battleController.useCard(this.owner, this);
-            battleController.removeHand(this.owner, this.gameObject);
-            battleController.addBattleZone(this.owner, this.gameObject);
-
-            addBattleZoneDrag();
         }
     }
 
 	private void OnTriggerEnter2D(Collider2D collision) {
 
-        if (collision.tag == "ownHandZone") {
+        if (collision.tag == "OwnHandZone") {
             // 手札エリアに入っている
             this.inHandZone = true;
             return;
@@ -123,11 +117,15 @@ abstract public class Card : MonoBehaviour {
             return;
         }
 
+        if(collision.tag == "OpponentFollower"){
+            // gameobjectを取得？
+            return;
+        }
 	}
 
     private void OnTriggerExit2D(Collider2D collision){
         
-        if (collision.tag == "ownHandZone") {
+        if (collision.tag == "OwnHandZone") {
             this.inHandZone = false;
             return;
         }
@@ -137,6 +135,10 @@ abstract public class Card : MonoBehaviour {
             return;
         }
 
+        if (collision.tag == "OpponentFollower") {
+            // gameobjectを取得？
+            return;
+        }
     }
 
     protected void onEffect(){
@@ -162,5 +164,9 @@ abstract public class Card : MonoBehaviour {
 
     public virtual void setActiveState(bool states){
         this.costObj.SetActive(states);
+    }
+
+    public void setOpponentCardTag(){
+        this.gameObject.tag = "OpponentFollower";
     }
 }

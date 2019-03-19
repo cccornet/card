@@ -7,5 +7,5 @@ abstract public class Amulet : Card {
     protected abstract void lastWord();
     protected abstract void effect();
 
-    protected override void addBattleZoneDrag() {}
+    public override void addBattleZoneDrag() {}
 }

@@ -24,6 +24,8 @@ public class PlayerManager : MonoBehaviour {
 
     public Sprite backSprite { get; set; }
 
+    public bool auto { get; set; }
+
     public PlayerManager(){
         this.maxPP = 0;
         this.pp = this.maxPP;
@@ -34,6 +36,7 @@ public class PlayerManager : MonoBehaviour {
         this.battleZone = new List<GameObject>();
         this.cemetery = new List<GameObject>();
         this.myTurn = false;
+        this.auto = false;
     }
 
     public void initBattle(){
@@ -50,6 +53,10 @@ public class PlayerManager : MonoBehaviour {
         drowCard(1);
         this.myTurn = true;
         wakeUpFollowers();
+
+        if(auto){
+            this.autoPlay();
+        }
     }
 
     public void endMyTurn(){
@@ -135,6 +142,29 @@ public class PlayerManager : MonoBehaviour {
         }
     }
 
+    public GameObject getMaxCostCard(int pp){
+        /* pp以下で最大の手札のカードを返す、該当するカードがない場合はnull */
+        if(this.hand == null){
+            return null;// FIXME null返すのはどうなのか
+        }
+
+        GameObject maxCostCard = null;
+        for (int i = 0; i < getHandNum(); i++) {
+            int cost = this.hand[i].GetComponent<Card>().cost;
+
+            if (cost > pp) {
+                continue;
+            }else if(maxCostCard == null) {
+                maxCostCard = this.hand[i];
+            }else if (maxCostCard.GetComponent<Card>().cost < cost) {
+                maxCostCard = this.hand[i];
+            }
+
+        }
+
+        return maxCostCard;
+    }
+
     public void damaged(int num){
         this.life = this.life - num;
         if(life < 1){
@@ -172,8 +202,11 @@ public class PlayerManager : MonoBehaviour {
     }
 
     public void addBattleZone(GameObject addCard) {
-        // TODO アニメーション再生
-        // TODO addCard.GetComponent<Card>().changeMainSprite(); // チェックするかすべて変更するかどちらが良い？
+        // TODO アニメーション再生　
+        if(auto/* 別のフラグ立てる？ */){
+            addCard.GetComponent<Card>().changeMainSprite();
+            addCard.GetComponent<Card>().setOpponentCardTag();
+        }
         this.battleZone.Add(addCard);
         addCard.GetComponent<Card>().lowStatePosiotion();
         displayZone("battleZone");
@@ -265,4 +298,27 @@ public class PlayerManager : MonoBehaviour {
         }
     }
 
+    public void autoPlay(){
+        
+        /* 使えるカードがなくなるまでコストが大きい順に使う */
+        while(true){
+            
+            /* 場が埋まっている時 */
+            if(this.battleZone.Count >= 5){
+                // TODO スペルは使える
+                break;
+            }
+
+            GameObject maxCostCard = this.getMaxCostCard(this.pp);
+            if(maxCostCard == null){
+                break;
+            }else{
+                battleController.useCard(this.gameObject, maxCostCard.GetComponent<Card>());
+            }
+        }
+
+        // TODO 攻撃
+
+        this.battleController.endTurn();
+    }
 }
