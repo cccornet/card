@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class BattleController : MonoBehaviour {
 
@@ -41,12 +42,8 @@ public class BattleController : MonoBehaviour {
         List<GameObject> deck2 = new List<GameObject>();
 
         // TODO deck 読み込み
-        int DECKMAX = 10;
-        for (int i = 0; i < DECKMAX; i++){
-            deck1.Add((GameObject)Resources.Load("Prefabs/Card/" + "Goblin"));
-            deck2.Add((GameObject)Resources.Load("Prefabs/Card/" + "Goblin"));
-            // deckエリアの子要素？
-        }
+        deck1 = this.makeSampleDeck(deck1);
+        deck2 = this.makeSampleDeck(deck2);
 
         // 先攻後攻決め
         // bool firstPlay = Random.Range(0, 2) == 0 ? true : false;
@@ -59,6 +56,9 @@ public class BattleController : MonoBehaviour {
 
         this.playerInfoManager.GetComponent<PlayerInfoManager>().player1 = this.player1;
         this.playerInfoManager.GetComponent<PlayerInfoManager>().player2 = this.player2;
+
+        this.shuffleDeck(player1);
+        this.shuffleDeck(player2);
 
         this.player1.GetComponent<PlayerManager>().initBattle();
         this.player2.GetComponent<PlayerManager>().initBattle();
@@ -108,9 +108,27 @@ public class BattleController : MonoBehaviour {
         if(targetCard is Follower){
             player.GetComponent<PlayerManager>().addBattleZone(targetCard.gameObject);
             targetCard.addBattleZoneDrag();
+            ((Follower)targetCard).playAnim();
         }else{
             // TODO スペル、アミュレット
         }
+    }
+
+    public IEnumerator autoUseCard(GameObject player, Card targetCard){
+        player.GetComponent<PlayerManager>().useCard(targetCard);
+        player.GetComponent<PlayerManager>().removeHand(targetCard.gameObject);
+
+        if (targetCard is Follower) {
+            player.GetComponent<PlayerManager>().addBattleZone(targetCard.gameObject);
+            targetCard.addBattleZoneDrag();
+
+            ((Follower)targetCard).anim.PlayQueued("Play");
+            yield return new WaitForSeconds(((Follower)targetCard).anim.clip.length + 0.1f);
+        }
+        else {
+            // TODO スペル、アミュレット
+        }
+        yield return null;
     }
 
     public void removeHand(GameObject player, GameObject removeCard){
@@ -139,9 +157,54 @@ public class BattleController : MonoBehaviour {
 
     }
 
-    public void attackOpponentPlayer(int attack){
-        this.player2.GetComponent<PlayerManager>().life -= attack;
-        checkGameOver(player2);
+    public void attackOpponentPlayer(Follower attackFollower) {
+        attackFollower.attackAnim();
+        if(attackFollower.owner == this.player1){
+            this.player2.GetComponent<PlayerManager>().life -= attackFollower.attack;
+            attackFollower.canAttack = false;
+            checkGameOver(player2);
+        }else{
+            this.player1.GetComponent<PlayerManager>().life -= attackFollower.attack;
+            attackFollower.canAttack = false;
+            checkGameOver(player1);
+        }
+
+    }
+
+    public IEnumerator autoAttackOpponentPlayer(Follower attackFollower){
+        attackFollower.anim.PlayQueued("Attack");
+        yield return new WaitForSeconds(attackFollower.anim.clip.length + 0.1f);
+
+        if (attackFollower.owner == this.player1) {
+            this.player2.GetComponent<PlayerManager>().life -= attackFollower.attack;
+            attackFollower.canAttack = false;
+            checkGameOver(player2);
+        }
+        else {
+            this.player1.GetComponent<PlayerManager>().life -= attackFollower.attack;
+            attackFollower.canAttack = false;
+            checkGameOver(player1);
+        }
+        yield return null;
+    }
+
+    //public void attackOpponentPlayer(int attack){
+    //    this.player2.GetComponent<PlayerManager>().life -= attack;
+    //    checkGameOver(player2);
+    //}
+
+    public void battleFollowers(Follower follower1, Follower follower2) {
+        follower1.attackAnim();
+
+        follower1.setHealth(follower1.health - follower2.attack);
+        follower2.setHealth(follower2.health - follower1.attack);
+
+        follower1.canAttack = false;
+        follower2.canAttack = false;
+
+        this.player1.GetComponent<PlayerManager>().checkFollowersHealth();
+        this.player2.GetComponent<PlayerManager>().checkFollowersHealth();
+
     }
 
     public void checkGameOver(GameObject player){
@@ -192,5 +255,23 @@ public class BattleController : MonoBehaviour {
         }else{
             return true;
         }
+    }
+
+    public void shuffleDeck(GameObject player){
+        player.GetComponent<PlayerManager>().shuffleDeck();
+    }
+
+
+    public List<GameObject> makeSampleDeck(List<GameObject> deck){
+        /* 暫定的に */
+        int DECKMAX = 10;
+        for (int i = 0; i < DECKMAX; i++) {
+            deck.Add((GameObject)Resources.Load("Prefabs/Card/" + "Goblin"));
+            deck.Add((GameObject)Resources.Load("Prefabs/Card/" + "Fighter"));
+            deck.Add((GameObject)Resources.Load("Prefabs/Card/" + "ExileOfMercenaries"));
+            deck.Add((GameObject)Resources.Load("Prefabs/Card/" + "Goliath"));
+        }
+
+        return deck;
     }
 }

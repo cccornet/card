@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
 
 public class PlayerManager : MonoBehaviour {
 
@@ -55,12 +56,14 @@ public class PlayerManager : MonoBehaviour {
         wakeUpFollowers();
 
         if(auto){
-            this.autoPlay();
+            StartCoroutine(this.autoPlay());
+            //this.autoPlay();
         }
     }
 
     public void endMyTurn(){
         this.myTurn = false;
+        // this.sleepFollowers();/* 相手ターンに動かせないように */
     }
 
     private void incrementPP(){
@@ -90,7 +93,7 @@ public class PlayerManager : MonoBehaviour {
         }
     }
 
-    private void shuffleDeck(){
+    public void shuffleDeck(){
         var deckNum = this.deck.Count;
         for (int i = 0; i < deckNum; i++) {
             GameObject temp = this.deck[i];
@@ -276,8 +279,17 @@ public class PlayerManager : MonoBehaviour {
 
     public void wakeUpFollowers(){
         // 場のフォロワーを攻撃可能にする
+        int i = 0;
         foreach(GameObject follower in this.battleZone){
+            i++;
             follower.GetComponent<Follower>().enableAttack();
+        }
+    }
+
+    public void sleepFollowers(){
+        // 場のフォロワーを攻撃不可にする
+        foreach (GameObject follower in this.battleZone) {
+            follower.GetComponent<Follower>().disableAttack();
         }
     }
 
@@ -288,17 +300,20 @@ public class PlayerManager : MonoBehaviour {
     //}
 
     public void checkFollowersHealth() {
-        foreach (GameObject cardObj in this.battleZone) {
-            Card card = cardObj.GetComponent<Card>();
-            if (card is Follower && ((Follower)card).health <= 0) {
-                removeBattleZone(cardObj);
-                addCemetery(cardObj);
-                Destroy(cardObj);// 要検証 Instantiate()の逆のみ行う
+
+        /* foreachでは、中で対象のリストの要素を削除できない */
+        for (int i = 0; i < this.battleZone.Count; i++){
+            GameObject card = this.battleZone[i];
+            if (card.GetComponent<Card>() is Follower && ((Follower)card.GetComponent<Card>()).health <= 0) {
+                removeBattleZone(card);
+                addCemetery(card);
+                Destroy(card);
             }
         }
+
     }
 
-    public void autoPlay(){
+    public IEnumerator autoPlay(){
         
         /* 使えるカードがなくなるまでコストが大きい順に使う */
         while(true){
@@ -313,12 +328,20 @@ public class PlayerManager : MonoBehaviour {
             if(maxCostCard == null){
                 break;
             }else{
-                battleController.useCard(this.gameObject, maxCostCard.GetComponent<Card>());
+                yield return battleController.autoUseCard(this.gameObject, maxCostCard.GetComponent<Card>());
             }
         }
 
-        // TODO 攻撃
+        // TODO フォロワーへの攻撃
+        foreach(GameObject cardObj in this.battleZone){
+            Card card = cardObj.GetComponent<Card>();
+            if (card is Follower && ((Follower)card).canAttack == true) {
+                yield return battleController.autoAttackOpponentPlayer((Follower)card);
+            }
+        }
 
         this.battleController.endTurn();
+
+        yield return null;
     }
 }

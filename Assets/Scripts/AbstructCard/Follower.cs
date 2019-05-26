@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System.Collections;
 
 abstract public class Follower : Card {
-    protected int attack;
-    public int health { get; set; }
+    public int attack { get; protected set; }
+    public int health { get; protected set; }
 
-    public bool canAttack { get; protected set; }
+    public bool canAttack { get; set; }
 
     protected abstract string CARDNAME{ get; }
     protected abstract int COST { get; }
@@ -21,6 +22,8 @@ abstract public class Follower : Card {
     protected GameObject healthObj;
     protected Text attackText;
     protected Text healthText;
+
+    public Animation anim;
 
 	//private void addHandDrag(){
 	//    base.addHandDrag();
@@ -49,6 +52,27 @@ abstract public class Follower : Card {
         this.healthText.text = this.health.ToString();
 
         this.canAttack = false;
+
+        this.anim = GetComponent<Animation>();
+    }
+
+    public void attackAnim(){
+        StartCoroutine("callAttackAnim");
+    }
+
+    protected IEnumerator callAttackAnim(){
+        this.anim.PlayQueued("Attack");
+        yield return null;
+    }
+
+    // TODO Card.csに変更
+    public void playAnim() {
+        StartCoroutine("callPlayAnim");
+    }
+
+    protected IEnumerator callPlayAnim() {
+        this.anim.PlayQueued("Play");
+        yield return null;
     }
 
 	public void enableAttack(){
@@ -124,14 +148,13 @@ abstract public class Follower : Card {
         }
 
         if(this.attackOpponent/*相手プレイヤーが選択された時*/){
-            this.battleController.GetComponent<BattleController>().attackOpponentPlayer(this.attack);
-            this.canAttack = false;
-        }else if (false/* 相手フォロワーが選択された時 */){
-            // 1.互いにダメージを与えあう
-            // 2.破壊処理
+            this.battleController.GetComponent<BattleController>().attackOpponentPlayer(this);
+        }else if (this.attackedFollower != null/* 相手フォロワーが選択された時 */){
+            this.battleController.GetComponent<BattleController>().battleFollowers(this, this.attackedFollower.GetComponent<Follower>());
 
-            // 複数選択不可にする方法
-            // とりあえず複数だったら弾くか
+            // TODO 正確に選択する方法
+            // とりあえず複数だったら弾く?
+
         }else/* 選択されなかった時 */{
             
         }
@@ -163,4 +186,15 @@ abstract public class Follower : Card {
         this.attackObj.SetActive(states);
         this.healthObj.SetActive(states);
     }
+
+    public void setAttack(int attackVal){
+        this.attack = attackVal;
+        this.attackText.text = attackVal.ToString();
+    }
+
+    public void setHealth(int healthVal) {
+        this.health = healthVal;
+        this.healthText.text = healthVal.ToString();
+    }
+
 }

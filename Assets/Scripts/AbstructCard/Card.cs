@@ -14,6 +14,7 @@ abstract public class Card : MonoBehaviour {
     private bool inHandZone;
     //private bool inBattleZone;
     protected bool attackOpponent;
+    protected GameObject attackedFollower; /* 衝突判定がCard.csにあるのでとりあえずここ */
 
     private SpriteRenderer mainSpriteRenderer;
     private Sprite mainSprite;
@@ -103,22 +104,22 @@ abstract public class Card : MonoBehaviour {
     }
 
 	private void OnTriggerEnter2D(Collider2D collision) {
-
+        
         if (collision.tag == "OwnHandZone") {
             // 手札エリアに入っている
             this.inHandZone = true;
             return;
         }
 
-        // TODO
+        // FIXME 自プレイヤーと区別する
         if (collision.tag == "Player") {
             // 相手プレイヤーを選択している
             this.attackOpponent = true;
             return;
         }
 
-        if(collision.tag == "OpponentFollower"){
-            // gameobjectを取得？
+        if (collision.tag == "OpponentFollower") {
+            this.attackedFollower = collision.gameObject;
             return;
         }
 	}
@@ -135,13 +136,15 @@ abstract public class Card : MonoBehaviour {
             return;
         }
 
-        if (collision.tag == "OpponentFollower") {
-            // gameobjectを取得？
-            return;
+        if (collision.gameObject.tag == "OpponentFollower") {
+            if (collision.gameObject.tag == "OpponentFollower") {
+                this.attackedFollower = null;
+                return;
+            }
         }
     }
 
-    protected void onEffect(){
+	protected void onEffect(){
         // TODO
     }
 
@@ -151,7 +154,7 @@ abstract public class Card : MonoBehaviour {
 
     public void changeBackSprite(){
         this.mainSpriteRenderer.sprite = backSprite;/* インスタンス化してないとmainSpriteRendererがnullなので注意 */
-        // TODO コスト等を非表示にする
+        // TODO コスト等を非表示にする 子のメソッド呼べるか確認
     }
 
     public void changeMainSprite() {
@@ -169,4 +172,5 @@ abstract public class Card : MonoBehaviour {
     public void setOpponentCardTag(){
         this.gameObject.tag = "OpponentFollower";
     }
+
 }
